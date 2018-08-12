@@ -1,0 +1,11 @@
+{
+  "name": "resizer",
+  "version": "1.0.0",
+  "description": "Image resizer",
+  "main": "index.js",
+  "scripts": {
+    
+  },
+  "author": "Oguzhan INAN",
+  "license": "MIT"
+}
