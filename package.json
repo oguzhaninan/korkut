@@ -4,8 +4,8 @@
   "description": "Image resizer",
   "main": "index.js",
   "scripts": {
-    "start": "node build/index.js",
-    "build": "babel src -d build",
+    "start": "node lib/index.js",
+    "build": "babel src -d lib",
     "run": "yarn run build && yarn start"
   },
   "author": "Oguzhan INAN",
