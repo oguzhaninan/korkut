@@ -4,8 +4,19 @@
   "description": "Image resizer",
   "main": "index.js",
   "scripts": {
-    
+    "start": "node build/index.js",
+    "build": "babel src -d build",
+    "run": "yarn run build && yarn start"
   },
   "author": "Oguzhan INAN",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0"
+  },
+  "dependencies": {
+    "gm": "^1.23.1",
+    "inquirer": "^6.1.0",
+    "rxjs": "^6.2.2"
+  }
 }
