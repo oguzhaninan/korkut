@@ -26,29 +26,26 @@ export default {
         message: 'What do you want?',
         name: 'options',
         choices: [{
-            name: ' Blur',
+            name: ' Convert',
             value: 'blur'
         }, {
-            name: ' Resize',
+            name: ' Crop',
             value: 'resize'
         }, {
-            name: ' Backdrop',
-            value: 'backdrop'
-        }, {
-            name: ' Blur',
-            value: 'blur'
-        }, {
-            name: ' Backdrop',
-            value: 'backdrop'
-        }, {
-            name: ' Blur',
-            value: 'blur'
-        }, {
             name: ' Resize',
-            value: 'resize'
-        }, {
-            name: ' Backdrop',
             value: 'backdrop'
-        }]
+        }, {
+            name: ' Resize & Crop',
+            value: 'blur'
+        }, {
+            name: ' Crop & Resize',
+            value: 'backdrop'
+        }, {
+            name: ' Rotate',
+            value: 'blur'
+        }, {
+            name: ' Create Thumbnail',
+            value: 'resize'
+        },]
     }
 }

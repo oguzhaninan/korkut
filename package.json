@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node lib/index.js",
     "build": "babel src -d lib",
-    "run": "yarn run build && yarn start"
+    "run": "yarn run build && clear && yarn start"
   },
   "author": "Oguzhan INAN",
   "license": "MIT",
