@@ -5,12 +5,16 @@
   "main": "index.js",
   "scripts": {
     "start": "node lib/index.js",
-    "build": "babel src -d lib",
-    "run": "yarn run build && clear && yarn start"
+    "build:babel": "babel src -d lib",
+    "build:tsc": "tsc",
+    "run": "yarn run build:tsc && clear && yarn start"
   },
   "author": "Oguzhan INAN",
   "license": "MIT",
   "devDependencies": {
+    "@types/gm": "^1.18.0",
+    "@types/inquirer": "^0.0.43",
+    "@types/node": "^10.7.1",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0"
   },
