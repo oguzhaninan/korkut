@@ -1,5 +1,5 @@
 import { InputType, ImageOperations, ImageFormats } from './Types'
-import FileUtils from './FileUtils'
+import FileUtils from './Utils/FileUtils'
 
 export default {
     inputType: {
@@ -32,10 +32,10 @@ export default {
         message: 'Output file path:',
         name: 'outputFilePath'
     },
-    dirPath: {
+    inputDirPath: {
         type: 'input',
         message: 'Directory path:',
-        name: 'dirPath',
+        name: 'inputDirPath',
         validate: (path: string) => {
             try {
                 if (! FileUtils.isDirectory(path)) {
@@ -45,6 +45,21 @@ export default {
                     if (foundImages.length == 0) {
                         return 'Not found image.'
                     }
+                }
+            } catch (err) {
+                return 'Invalid path.'
+            }
+            return true;
+        }
+    },
+    outputDirPath: {
+        type: 'input',
+        message: 'Output directory path:',
+        name: 'outputDirPath',
+        validate: (path: string) => {
+            try {
+                if (! FileUtils.isDirectory(path)) {
+                    return 'Not directory.'
                 }
             } catch (err) {
                 return 'Invalid path.'

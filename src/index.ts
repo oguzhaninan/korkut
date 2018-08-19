@@ -3,8 +3,8 @@ import * as fs from 'fs'
 import * as gm from 'gm'
 import * as Ora from 'ora'
 import Questions from './Questions'
-import FileUtils from './FileUtils'
-import ImageUtils from './ImageUtils';
+import FileUtils from './Utils/FileUtils'
+import ImageUtils from './Utils/ImageUtils';
 import { InputType, ImageOperations } from './Types'
 
 gm.subClass({ imageMagick: true });
@@ -16,7 +16,8 @@ export default class Resizer {
     private inputFilePath: string;
     private outputFilePath: string;
 
-    private inputDirectoryPath: string;
+    private inputDirPath: string;
+    private outputDirPath: string;
     private inputFiles: string[];
 
     private spinner: any;
@@ -36,10 +37,15 @@ export default class Resizer {
     }
 
     async askDirPath(): Promise<void> {
-        let { dirPath }: any = await inquirer.prompt([Questions.dirPath]);
+        let { 
+            inputDirPath,
+            outputDirPath,
+        }: any = await inquirer.prompt([Questions.inputDirPath, Questions.outputDirPath]);
 
-        let foundImages = FileUtils.dirFiles(dirPath, FileUtils.IMAGE_FORMATS);
-        this.inputDirectoryPath = dirPath;
+        let foundImages = FileUtils.dirFiles(inputDirPath, FileUtils.IMAGE_FORMATS);
+
+        this.inputDirPath = inputDirPath;
+        this.outputDirPath = outputDirPath;
         this.inputFiles = foundImages;
 
         console.log(`Number of image found: ${foundImages.length}`);
@@ -60,44 +66,56 @@ export default class Resizer {
     async askImageOperations(): Promise<void> {
         let { operation }: any = await inquirer.prompt([Questions.operations]);
         
+        // await this.askOutputFilePath()
+
         switch (operation) {
             // Convert
             case ImageOperations.Convert:
-                await this.askOutputFilePath()
                 let {
                     autoOrient,
                     quality,
-                }: any = await inquirer.prompt([Questions.autoOrient, Questions.quality])
+                }: any = await inquirer.prompt([Questions.autoOrient, Questions.quality]);
 
-                this.startSpinner('Processing...')
-                await ImageUtils.convert({
-                    src: this.inputFilePath,
-                    dst: this.outputFilePath,
-                    quality: parseInt(quality),
-                    autoOrient,
-                })
-                this.succedSpinner('Successfully completed.')
+                this.startSpinner('Processing...');
+                const inputCount: number = this.inputFiles.length;
 
+                for(let i = 0; i < this.inputFiles.length; ++i) {
+                    const filePath: string = this.inputFiles[i];
+                    try {
+                        await ImageUtils.convert({
+                            src: `${this.inputDirPath}/${filePath}`,
+                            dst: `${this.outputDirPath}/new-${filePath}`,
+                            quality: parseInt(quality),
+                            autoOrient,
+                        });
+                        this.spinner.text = `Processing... (${i+1}/${inputCount})`;
+                    } catch(err) {
+                        console.log('err')
+                    }
+                }
+                this.succedSpinner('Successfully completed.');
                 break;
+                
+            // Resize
+            case ImageOperations.Resize: 
+
             default:
                 break;
         }
-            
     }
 
     async askInputType(): Promise<void> {
-        let { inputType }: any = await inquirer.prompt([Questions.inputType])
-        this.inputType = inputType
+        let { inputType }: any = await inquirer.prompt([Questions.inputType]);
+        this.inputType = inputType;
 
         switch (inputType) {
             case InputType.File:
-                await this.askInputFilePath()
+                await this.askInputFilePath();
                 break;
             case InputType.Directory:
-                await this.askDirPath()
+                await this.askDirPath();
                 break;
         }
-
     }
 
     async main(): Promise<void> {
@@ -108,7 +126,7 @@ export default class Resizer {
 
 }
 
-new Resizer().main()
+new Resizer().main();
 
 
 

@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node lib/index.js",
     "build:tsc": "tsc",
-    "clean": "rm lib/*",
+    "clean": "rm -rf lib/*",
     "run": "yarn run build:tsc && clear && yarn start"
   },
   "dependencies": {
