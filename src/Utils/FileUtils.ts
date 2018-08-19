@@ -34,15 +34,15 @@ export default class FileUtils {
         }
     }
 
-    static addPrefixOrSuffix(fileName: string, prefix: string, suffix: string): string {
-        if (prefix) fileName += prefix;
+    static addPrefixOrSuffix(fileName: string, prefix: string, suffix?: string): string {
+        if (prefix) fileName = prefix + fileName;
         
         if (suffix) {
-            fileName = fileName
+            let temp = fileName
                 .split('.')
-                .reverse()
-                .splice(1, 0, suffix)
-                .reverse()
+                .reverse()            
+            temp[1] += suffix;            
+            fileName = temp.reverse()
                 .join('.');
         }
         

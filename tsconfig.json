@@ -19,7 +19,6 @@
         "src/**/*"
     ],
     "exclude": [
-        "node_modules",
-        "lib"
+        "node_modules"
     ]
 }
