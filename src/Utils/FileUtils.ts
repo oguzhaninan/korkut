@@ -33,4 +33,19 @@ export default class FileUtils {
             return files;
         }
     }
+
+    static addPrefixOrSuffix(fileName: string, prefix: string, suffix: string): string {
+        if (prefix) fileName += prefix;
+        
+        if (suffix) {
+            fileName = fileName
+                .split('.')
+                .reverse()
+                .splice(1, 0, suffix)
+                .reverse()
+                .join('.');
+        }
+        
+        return fileName;
+    }
 }

@@ -7,7 +7,7 @@ enum ImageOperations {
     Resize = 'resize',
     Rotate = 'rotate',
     Thumbnail = 'thumbnail',
-    ChangeQuality = 'changeQuality'
+    Optimize = 'optimize'
 }
 
 export default ImageOperations;

@@ -74,8 +74,8 @@ export default {
         message: 'What do you want?',
         name: 'operation',
         choices: [{
-            name: ' Change Quality',
-            value: ImageOperations.ChangeQuality
+            name: ' Optimize',
+            value: ImageOperations.Optimize
         }, {
             name: ' Convert',
             value: ImageOperations.Convert
@@ -114,5 +114,30 @@ export default {
             }
             return true;
         }
+    },
+    suffix: {
+        type: 'input',
+        message: 'Enter the suffix:',
+        name: 'suffix'
+    },
+    prefix: {
+        type: 'input',
+        message: 'Enter the prefix:',
+        name: 'prefix'
+    },
+    suffixOrPrefix: {
+        type: 'list',
+        message: 'Do you want suffix or prefix?',
+        name: 'suffixOrPrefix',
+        choices: [{
+            name: 'Prefix',
+            value: 'prefix'
+        }, {
+            name: 'Suffix',
+            value: 'suffix'
+        }, {
+            name: 'No',
+            value: 'no'
+        }]
     }
 }

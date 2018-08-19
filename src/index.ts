@@ -1,11 +1,13 @@
 import * as inquirer from 'inquirer'
 import * as gm from 'gm'
 import * as Ora from 'ora'
+import * as path from 'path'
+
 import Questions from './Questions'
 import FileUtils from './Utils/FileUtils'
-import ImageUtils from './Utils/ImageUtils';
-import ImageOperations from "./Enums/ImageOperations";
-import InputType from "./Enums/InputType";
+import ImageUtils from './Utils/ImageUtils'
+import ImageOperations from "./Enums/ImageOperations"
+import InputType from "./Enums/InputType"
 
 gm.subClass({ imageMagick: true });
 
@@ -15,6 +17,9 @@ export default class Resizer {
 
     private inputFilePath: string;
     private outputFilePath: string;
+
+    private suffix: string = '';
+    private prefix: string = '';
 
     private inputDirPath: string;
     private outputDirPath: string;
@@ -34,6 +39,23 @@ export default class Resizer {
     async askOutputFilePath(): Promise<void> {
         let { outputFilePath }: any = await inquirer.prompt([Questions.outputFilePath]);
         this.outputFilePath = outputFilePath;
+    }
+
+    async askSuffixOrPrefix(): Promise<void> {
+        let { suffixOrPrefix }: any = await inquirer.prompt([Questions.suffixOrPrefix]);
+
+        switch (suffixOrPrefix) {
+            case 'suffix':
+                let { suffix }: any = await inquirer.prompt([Questions.suffix]);
+                this.suffix = suffix;
+                break;
+            case 'prefix':
+                let { prefix }: any = await inquirer.prompt([Questions.prefix]);
+                this.prefix = prefix;
+                break;
+            default:
+                break;
+        }
     }
 
     async askDirPath(): Promise<void> {
@@ -68,7 +90,7 @@ export default class Resizer {
 
         switch (operation) {
             // Convert
-            case ImageOperations.ChangeQuality: {
+            case ImageOperations.Optimize: {
                 let { quality }: any = await inquirer.prompt([Questions.quality]);
 
                 this.startSpinner('Processing...');
@@ -80,7 +102,7 @@ export default class Resizer {
                         await ImageUtils.convert({
                             src: `${this.inputDirPath}/${filePath}`,
                             dst: `${this.outputDirPath}/new-${filePath}`,
-                            quality: parseInt(quality)
+                            quality: parseInt(quality),
                         });
                         this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
                     } catch (err) {
@@ -88,9 +110,9 @@ export default class Resizer {
                         this.failSpinner('Failed.');
                     }
                 }
-                this.succedSpinner('Successfully completed.');     
+                this.succedSpinner('Successfully completed.');
             }
-            break;
+                break;
             // Convert
             case ImageOperations.Convert: {
                 let {
@@ -102,11 +124,12 @@ export default class Resizer {
                 const inputCount: number = this.inputFiles.length;
 
                 for (let i = 0; i < this.inputFiles.length; ++i) {
-                    const filePath: string = this.inputFiles[i];
+                    const filePath: string = FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
                     try {
+                        let src: string = path.join(this.inputDirPath, filePath)
                         await ImageUtils.convert({
-                            src: `${this.inputDirPath}/${filePath}`,
-                            dst: `${this.outputDirPath}/new-${filePath}`,
+                            src,
+                            // dst, `${this.outputDirPath}/new-${filePath}`,
                             quality: parseInt(quality),
                             autoOrient,
                         });
@@ -116,9 +139,9 @@ export default class Resizer {
                         this.failSpinner('Failed.');
                     }
                 }
-                this.succedSpinner('Successfully completed.');                
+                this.succedSpinner('Successfully completed.');
             }
-            break;
+                break;
 
             // Resize
             case ImageOperations.Resize:
@@ -138,6 +161,7 @@ export default class Resizer {
                 break;
             case InputType.Directory:
                 await this.askDirPath();
+                await this.askSuffixOrPrefix();
                 break;
         }
     }
