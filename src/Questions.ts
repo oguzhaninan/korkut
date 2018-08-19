@@ -2,10 +2,10 @@ import { InputType, ImageOperations, ImageFormats } from './Types'
 import FileUtils from './FileUtils'
 
 export default {
-    input_type: {
+    inputType: {
         type: "list",
         message: "What is your input type?",
-        name: "input_type",
+        name: "inputType",
         choices: [{
             name: "File",
             value: InputType.File
@@ -14,10 +14,10 @@ export default {
             value: InputType.Directory
         }]
     },
-    input_file_name: {
+    inputFilePath: {
         type: 'input',
         message: 'Input file path:',
-        name: 'input_file_name',
+        name: 'inputFilePath',
         validate: (path: string ) => {
             if (!FileUtils.exists(path)) {
                 return 'File not exists.'
@@ -27,19 +27,24 @@ export default {
             return true;
         }
     },
-    output_file_name: {
+    outputFilePath: {
         type: 'input',
         message: 'Output file path:',
-        name: 'output_file_name'
+        name: 'outputFilePath'
     },
-    dir_path: {
+    dirPath: {
         type: 'input',
         message: 'Directory path:',
-        name: 'dir_path',
+        name: 'dirPath',
         validate: (path: string) => {
             try {
                 if (! FileUtils.isDirectory(path)) {
                     return 'Not directory.'
+                } else {
+                    let foundImages = FileUtils.dirFiles(path, FileUtils.IMAGE_FORMATS);
+                    if (foundImages.length == 0) {
+                        return 'Not found image.'
+                    }
                 }
             } catch (err) {
                 return 'Invalid path.'
@@ -72,6 +77,6 @@ export default {
         }, {
             name: ' Create Thumbnail',
             value: ImageOperations.Thumbnail
-        },]
+        }]
     }
 }

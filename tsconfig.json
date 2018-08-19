@@ -6,6 +6,11 @@
         "preserveConstEnums": true,
         "sourceMap": true,
         "outDir": "lib",
+        "target": "es5",
+        "experimentalDecorators": true,
+        "lib": [
+            "es2015"
+        ],
         "types": [
             "node"
         ]

@@ -3,21 +3,21 @@
   "version": "1.0.0",
   "description": "Image resizer",
   "main": "index.js",
-  "scripts": {
-    "start": "node lib/index.js",
-    "build:babel": "babel src -d lib",
-    "build:tsc": "tsc",
-    "run": "yarn run build:tsc && clear && yarn start"
-  },
   "author": "Oguzhan INAN",
   "license": "MIT",
-  "devDependencies": {
-    "@types/gm": "^1.18.0",
-    "@types/inquirer": "^0.0.43",
-    "@types/node": "^10.7.1"
+  "scripts": {
+    "start": "node lib/index.js",
+    "build:tsc": "tsc",
+    "clean": "rm lib/*",
+    "run": "yarn run build:tsc && clear && yarn start"
   },
   "dependencies": {
     "gm": "^1.23.1",
     "inquirer": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/gm": "^1.18.0",
+    "@types/inquirer": "^0.0.43",
+    "@types/node": "^10.7.1"
   }
 }

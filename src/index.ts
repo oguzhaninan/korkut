@@ -21,26 +21,24 @@ export default class Resizer {
 
     }
 
-    askFilePath() {
-        inquirer.prompt([Questions.input_file_name, Questions.output_file_name])
-            .then(({ input_file_name, output_file_name }: any) => {
-                this.inputFilePath = input_file_name
-                this.outputFilePath = output_file_name
-            })
+    async askFilePath(): Promise<void> {
+        let { 
+            inputFilePath,
+            outputFilePath,
+        }: any = await inquirer.prompt([Questions.inputFilePath, Questions.outputFilePath]);
+
+        this.inputFilePath = inputFilePath;
+        this.outputFilePath = outputFilePath;
     }
 
-    askDirPath() {
-        inquirer.prompt([Questions.dir_path])
-            .then(({ dir_path }: any) => {
-                let foundImages = FileUtils.dirFiles(dir_path, FileUtils.IMAGE_FORMATS);
-                if (foundImages.length > 0) {
-                    console.log(`Number of image found: ${foundImages.length}`);
-                    this.inputDirectoryPath = dir_path
-                    this.inputFiles = foundImages;
-                } else {
-                    console.log('Not found image.');
-                }
-            })
+    async askDirPath(): Promise<void> {
+        let { dirPath }: any = await inquirer.prompt([Questions.dirPath]);
+
+        let foundImages = FileUtils.dirFiles(dirPath, FileUtils.IMAGE_FORMATS);
+        this.inputDirectoryPath = dirPath;
+        this.inputFiles = foundImages;
+        
+        console.log(`Number of image found: ${foundImages.length}`);
     }
 
     askImageOperations() {
@@ -50,24 +48,25 @@ export default class Resizer {
             })
     }
 
-    askInputType() {
-        inquirer.prompt([Questions.input_type])
-            .then(({ input_type }: any) => {
-                switch (input_type) {
-                    case InputType.File:
-                        this.askFilePath()
-                        break;
-                    case InputType.Directory:
-                        this.askDirPath()
-                        break;
-                }
-            })
+    async askInputType(): Promise<void> {
+        let { inputType }: any = await inquirer.prompt([Questions.inputType])
+        this.inputType = inputType
+
+        switch (inputType) {
+            case InputType.File:
+                await this.askFilePath()
+                break;
+            case InputType.Directory:
+                await this.askDirPath()
+                break;
+        }
+
     }
 
-    main() {
-        this.askInputType();
-        
-        this.askImageOperations();
+    async main(): Promise<void> {
+        await this.askInputType();
+
+        await this.askImageOperations();
     }
 
 }
@@ -84,7 +83,7 @@ new Resizer().main()
 
 
 
-/* 
+/*
  gm('/home/oguzhan/Pictures/foto.jpg')
     // .blur(10,5)
     // .chop(500, 500, 100, 10)
