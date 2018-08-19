@@ -15,50 +15,42 @@ export default class Resizer {
     private outputFilePath: string;
 
     private inputDirectoryPath: string;
+    private inputFiles: string[];
 
     constructor() {
-        
+
     }
 
     askFilePath() {
         inquirer.prompt([Questions.input_file_name, Questions.output_file_name])
             .then(({ input_file_name, output_file_name }: any) => {
-                if (FileUtils.exists(input_file_name)) {
-                    if (FileUtils.isImage(input_file_name)) {
-
-                    } else {
-                        console.log('File is not image.')
-                    }
-                } else {
-                    console.log('File not exists.')
-                }
+                this.inputFilePath = input_file_name
+                this.outputFilePath = output_file_name
             })
     }
 
     askDirPath() {
         inquirer.prompt([Questions.dir_path])
             .then(({ dir_path }: any) => {
-                try {
-                    if (FileUtils.isDirectory(dir_path)) {
-                        let foundImages = FileUtils.dirFiles(dir_path, FileUtils.IMAGE_FORMATS);
-                        if (foundImages.length > 0) {
-                            console.log(`Found image count: ${foundImages.length}`);
-
-                            inquirer.prompt([Questions.options])
-                                .then(ans => {
-                                    console.log(ans)
-                                })
-                        } else {
-                            console.log('Not found image.');
-                        }
-                    }
-                } catch (err) {
-                    console.log('Invalid path.')
+                let foundImages = FileUtils.dirFiles(dir_path, FileUtils.IMAGE_FORMATS);
+                if (foundImages.length > 0) {
+                    console.log(`Number of image found: ${foundImages.length}`);
+                    this.inputDirectoryPath = dir_path
+                    this.inputFiles = foundImages;
+                } else {
+                    console.log('Not found image.');
                 }
             })
     }
 
-    main() {
+    askImageOperations() {
+        inquirer.prompt([Questions.operations])
+            .then(({ operations }: any) => {
+                console.log(operations)
+            })
+    }
+
+    askInputType() {
         inquirer.prompt([Questions.input_type])
             .then(({ input_type }: any) => {
                 switch (input_type) {
@@ -70,6 +62,12 @@ export default class Resizer {
                         break;
                 }
             })
+    }
+
+    main() {
+        this.askInputType();
+        
+        this.askImageOperations();
     }
 
 }

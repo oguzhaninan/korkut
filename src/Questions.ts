@@ -1,4 +1,5 @@
-import { InputType } from './Types'
+import { InputType, ImageOperations, ImageFormats } from './Types'
+import FileUtils from './FileUtils'
 
 export default {
     input_type: {
@@ -16,7 +17,15 @@ export default {
     input_file_name: {
         type: 'input',
         message: 'Input file path:',
-        name: 'input_file_name'
+        name: 'input_file_name',
+        validate: (path: string ) => {
+            if (!FileUtils.exists(path)) {
+                return 'File not exists.'
+            } else if (!FileUtils.isImage(path)) {
+                return 'File is not image.'
+            }
+            return true;
+        }
     },
     output_file_name: {
         type: 'input',
@@ -26,21 +35,31 @@ export default {
     dir_path: {
         type: 'input',
         message: 'Directory path:',
-        name: 'dir_path'
+        name: 'dir_path',
+        validate: (path: string) => {
+            try {
+                if (! FileUtils.isDirectory(path)) {
+                    return 'Not directory.'
+                }
+            } catch (err) {
+                return 'Invalid path.'
+            }
+            return true;
+        }
     },
-    options: {
+    operations: {
         type: 'checkbox',
         message: 'What do you want?',
-        name: 'options',
+        name: 'operations',
         choices: [{
             name: ' Convert',
-            value: 'blur'
+            value: ImageOperations.Convert
         }, {
             name: ' Crop',
-            value: 'resize'
+            value: ImageOperations.Crop
         }, {
             name: ' Resize',
-            value: 'backdrop'
+            value: ImageOperations.Resize
         }, {
             name: ' Resize & Crop',
             value: 'blur'
@@ -49,10 +68,10 @@ export default {
             value: 'backdrop'
         }, {
             name: ' Rotate',
-            value: 'blur'
+            value: ImageOperations.Rotate
         }, {
             name: ' Create Thumbnail',
-            value: 'resize'
+            value: ImageOperations.Thumbnail
         },]
     }
 }
