@@ -18,8 +18,8 @@ export default class Resizer {
     private inputFilePath: string;
     private outputFilePath: string;
 
-    private suffix: string = '';
-    private prefix: string = '';
+    private suffix: string;
+    private prefix: string;
 
     private inputDirPath: string;
     private outputDirPath: string;
@@ -97,11 +97,12 @@ export default class Resizer {
                 const inputCount: number = this.inputFiles.length;
 
                 for (let i = 0; i < this.inputFiles.length; ++i) {
-                    const filePath: string = this.inputFiles[i];
+                    const fileName: string = this.inputFiles[i];
+                    const outputFileName: string = FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
                     try {
                         await ImageUtils.convert({
-                            src: `${this.inputDirPath}/${filePath}`,
-                            dst: `${this.outputDirPath}/new-${filePath}`,
+                            src: path.join(this.inputDirPath, fileName),
+                            dst: path.join(this.outputDirPath, outputFileName),
                             quality: parseInt(quality),
                         });
                         this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
@@ -124,12 +125,12 @@ export default class Resizer {
                 const inputCount: number = this.inputFiles.length;
 
                 for (let i = 0; i < this.inputFiles.length; ++i) {
-                    const filePath: string = FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
+                    const fileName: string = this.inputFiles[i];
+                    const outputFileName: string = FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
                     try {
-                        let src: string = path.join(this.inputDirPath, filePath)
                         await ImageUtils.convert({
-                            src,
-                            // dst, `${this.outputDirPath}/new-${filePath}`,
+                            src: path.join(this.inputDirPath, fileName),
+                            dst: path.join(this.outputDirPath, outputFileName),
                             quality: parseInt(quality),
                             autoOrient,
                         });
