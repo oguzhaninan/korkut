@@ -1,9 +1,10 @@
 import * as inquirer from 'inquirer'
 import * as fs from 'fs'
 import * as gm from 'gm'
-import { convert } from 'easyimage'
+import * as Ora from 'ora'
 import Questions from './Questions'
 import FileUtils from './FileUtils'
+import ImageUtils from './ImageUtils';
 import { InputType, ImageOperations } from './Types'
 
 gm.subClass({ imageMagick: true });
@@ -18,8 +19,10 @@ export default class Resizer {
     private inputDirectoryPath: string;
     private inputFiles: string[];
 
-    constructor() {
+    private spinner: any;
 
+    constructor() {
+        this.spinner = new Ora({ spinner: "bouncingBar" });
     }
 
     async askInputFilePath(): Promise<void> {
@@ -42,23 +45,44 @@ export default class Resizer {
         console.log(`Number of image found: ${foundImages.length}`);
     }
 
-    async askImageOperations(): Promise<void> {
-        let { operations }: any = await inquirer.prompt([Questions.operations]);
+    startSpinner(text: string): void {
+        this.spinner.start(text);
+    }
 
-        if (operations.includes(ImageOperations.Convert)) {
-            await this.askOutputFilePath()
-            let { 
-                autoOrient,
-                quality,
-            }: any = await inquirer.prompt([Questions.autoOrient, Questions.quality])
-            
-            convert({
-                src: this.inputFilePath,
-                dst: this.outputFilePath,
-                quality: parseInt(quality),
-                autoOrient,
-            })
+    succedSpinner(text: string): void {
+        this.spinner.succeed(text);
+    }
+
+    failSpinner(text: string): void {
+        this.spinner.fail(text);
+    }
+
+    async askImageOperations(): Promise<void> {
+        let { operation }: any = await inquirer.prompt([Questions.operations]);
+        
+        switch (operation) {
+            // Convert
+            case ImageOperations.Convert:
+                await this.askOutputFilePath()
+                let {
+                    autoOrient,
+                    quality,
+                }: any = await inquirer.prompt([Questions.autoOrient, Questions.quality])
+
+                this.startSpinner('Processing...')
+                await ImageUtils.convert({
+                    src: this.inputFilePath,
+                    dst: this.outputFilePath,
+                    quality: parseInt(quality),
+                    autoOrient,
+                })
+                this.succedSpinner('Successfully completed.')
+
+                break;
+            default:
+                break;
         }
+            
     }
 
     async askInputType(): Promise<void> {

@@ -53,9 +53,9 @@ export default {
         }
     },
     operations: {
-        type: 'checkbox',
+        type: 'list',
         message: 'What do you want?',
-        name: 'operations',
+        name: 'operation',
         choices: [{
             name: ' Convert',
             value: ImageOperations.Convert
@@ -88,6 +88,7 @@ export default {
         type: 'input',
         message: 'Set the output quality (1-100):',
         name: 'quality',
+        default: 100,
         validate: (value: string) => {
             let quality = parseInt(value)
             if (quality != NaN) {
