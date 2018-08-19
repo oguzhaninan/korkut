@@ -1,46 +1,89 @@
 import * as inquirer from 'inquirer'
 import * as fs from 'fs'
 import * as gm from 'gm'
-import Questions from './questions'
+import Questions from './Questions'
 import FileUtils from './FileUtils'
+import { InputType } from './Types'
 
 gm.subClass({ imageMagick: true });
 
-inquirer.prompt([Questions.input_type])
-    .then(({ input_type }: any) => {
-        switch (input_type) {
-            case 'f':
-                inquirer.prompt([Questions.input_file_name, Questions.output_file_name])
-                    .then(({ input_file_name, output_file_name }: any) => {
-                        if (FileUtils.exists(input_file_name)) {
-                            if (FileUtils.isImage(input_file_name)) {
-                                
-                            } else {
-                                console.log('File is not image.')
-                            }
+export default class Resizer {
+
+    private inputType: InputType;
+
+    private inputFilePath: string;
+    private outputFilePath: string;
+
+    private inputDirectoryPath: string;
+
+    constructor() {
+        
+    }
+
+    askFilePath() {
+        inquirer.prompt([Questions.input_file_name, Questions.output_file_name])
+            .then(({ input_file_name, output_file_name }: any) => {
+                if (FileUtils.exists(input_file_name)) {
+                    if (FileUtils.isImage(input_file_name)) {
+
+                    } else {
+                        console.log('File is not image.')
+                    }
+                } else {
+                    console.log('File not exists.')
+                }
+            })
+    }
+
+    askDirPath() {
+        inquirer.prompt([Questions.dir_path])
+            .then(({ dir_path }: any) => {
+                try {
+                    if (FileUtils.isDirectory(dir_path)) {
+                        let foundImages = FileUtils.dirFiles(dir_path, FileUtils.IMAGE_FORMATS);
+                        if (foundImages.length > 0) {
+                            console.log(`Found image count: ${foundImages.length}`);
+
+                            inquirer.prompt([Questions.options])
+                                .then(ans => {
+                                    console.log(ans)
+                                })
                         } else {
-                            console.log('File not exists.')
+                            console.log('Not found image.');
                         }
-                    })
-                break;
-            case 'd':
-                inquirer.prompt([Questions.dir_path])
-                    .then(({ dir_path }: any) => {
-                        try {
-                            if (FileUtils.isDirectory(dir_path)) {
-                                console.log(FileUtils.dirFiles(dir_path, FileUtils.IMAGE_FORMATS))
-                            }
-                        } catch (err) {
-                            console.log('Wrong path.')
-                        }
-                    })
-                /*  inquirer.prompt([Questions.options])
-                     .then(ans => {
-                         console.log(ans)
-                     }) */
-                break;
-        }
-    })
+                    }
+                } catch (err) {
+                    console.log('Invalid path.')
+                }
+            })
+    }
+
+    main() {
+        inquirer.prompt([Questions.input_type])
+            .then(({ input_type }: any) => {
+                switch (input_type) {
+                    case InputType.File:
+                        this.askFilePath()
+                        break;
+                    case InputType.Directory:
+                        this.askDirPath()
+                        break;
+                }
+            })
+    }
+
+}
+
+new Resizer().main()
+
+
+
+
+
+
+
+
+
 
 
 /* 

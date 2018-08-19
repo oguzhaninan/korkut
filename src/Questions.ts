@@ -1,3 +1,5 @@
+import { InputType } from './Types'
+
 export default {
     input_type: {
         type: "list",
@@ -5,10 +7,10 @@ export default {
         name: "input_type",
         choices: [{
             name: "File",
-            value: "f"
+            value: InputType.File
         }, {
             name: "Directory",
-            value: "d"
+            value: InputType.Directory
         }]
     },
     input_file_name: {
