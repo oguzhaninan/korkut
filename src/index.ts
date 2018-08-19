@@ -1,9 +1,10 @@
 import * as inquirer from 'inquirer'
 import * as fs from 'fs'
 import * as gm from 'gm'
+import { convert } from 'easyimage'
 import Questions from './Questions'
 import FileUtils from './FileUtils'
-import { InputType } from './Types'
+import { InputType, ImageOperations } from './Types'
 
 gm.subClass({ imageMagick: true });
 
@@ -21,13 +22,13 @@ export default class Resizer {
 
     }
 
-    async askFilePath(): Promise<void> {
-        let { 
-            inputFilePath,
-            outputFilePath,
-        }: any = await inquirer.prompt([Questions.inputFilePath, Questions.outputFilePath]);
-
+    async askInputFilePath(): Promise<void> {
+        let { inputFilePath }: any = await inquirer.prompt([Questions.inputFilePath]);
         this.inputFilePath = inputFilePath;
+    }
+
+    async askOutputFilePath(): Promise<void> {
+        let { outputFilePath }: any = await inquirer.prompt([Questions.outputFilePath]);
         this.outputFilePath = outputFilePath;
     }
 
@@ -37,15 +38,27 @@ export default class Resizer {
         let foundImages = FileUtils.dirFiles(dirPath, FileUtils.IMAGE_FORMATS);
         this.inputDirectoryPath = dirPath;
         this.inputFiles = foundImages;
-        
+
         console.log(`Number of image found: ${foundImages.length}`);
     }
 
-    askImageOperations() {
-        inquirer.prompt([Questions.operations])
-            .then(({ operations }: any) => {
-                console.log(operations)
+    async askImageOperations(): Promise<void> {
+        let { operations }: any = await inquirer.prompt([Questions.operations]);
+
+        if (operations.includes(ImageOperations.Convert)) {
+            await this.askOutputFilePath()
+            let { 
+                autoOrient,
+                quality,
+            }: any = await inquirer.prompt([Questions.autoOrient, Questions.quality])
+            
+            convert({
+                src: this.inputFilePath,
+                dst: this.outputFilePath,
+                quality: parseInt(quality),
+                autoOrient,
             })
+        }
     }
 
     async askInputType(): Promise<void> {
@@ -54,7 +67,7 @@ export default class Resizer {
 
         switch (inputType) {
             case InputType.File:
-                await this.askFilePath()
+                await this.askInputFilePath()
                 break;
             case InputType.Directory:
                 await this.askDirPath()
@@ -75,14 +88,7 @@ new Resizer().main()
 
 
 
-
-
-
-
-
-
-
-
+//#region gimp 
 /*
  gm('/home/oguzhan/Pictures/foto.jpg')
     // .blur(10,5)
@@ -114,3 +120,5 @@ new Resizer().main()
     .write('/home/oguzhan/Pictures/foto2.jpg', err => console.log(err))
 
 process.exit() */
+
+//#endregion

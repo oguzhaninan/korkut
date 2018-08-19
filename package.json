@@ -12,6 +12,7 @@
     "run": "yarn run build:tsc && clear && yarn start"
   },
   "dependencies": {
+    "easyimage": "^3.1.0",
     "gm": "^1.23.1",
     "inquirer": "^6.1.0"
   },

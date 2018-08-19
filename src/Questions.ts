@@ -78,5 +78,26 @@ export default {
             name: ' Create Thumbnail',
             value: ImageOperations.Thumbnail
         }]
+    },
+    autoOrient: {
+        type: 'confirm',
+        message: 'Auto orientate the image?',
+        name: 'autoOrient'
+    },
+    quality: {
+        type: 'input',
+        message: 'Set the output quality (1-100):',
+        name: 'quality',
+        validate: (value: string) => {
+            let quality = parseInt(value)
+            if (quality != NaN) {
+                if (quality <= 0 || quality > 100) {
+                    return 'Enter a value between 1 - 100.'
+                }
+            } else {
+                return 'Type the number.'
+            }
+            return true;
+        }
     }
 }
