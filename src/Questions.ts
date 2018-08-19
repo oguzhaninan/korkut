@@ -1,4 +1,6 @@
-import { InputType, ImageOperations, ImageFormats } from './Types'
+import ImageFormats from "./Enums/ImageFormats";
+import ImageOperations from "./Enums/ImageOperations";
+import InputType from "./Enums/InputType";
 import FileUtils from './Utils/FileUtils'
 
 export default {
@@ -72,6 +74,9 @@ export default {
         message: 'What do you want?',
         name: 'operation',
         choices: [{
+            name: ' Change Quality',
+            value: ImageOperations.ChangeQuality
+        }, {
             name: ' Convert',
             value: ImageOperations.Convert
         }, {
@@ -81,16 +86,10 @@ export default {
             name: ' Resize',
             value: ImageOperations.Resize
         }, {
-            name: ' Resize & Crop',
-            value: 'blur'
-        }, {
-            name: ' Crop & Resize',
-            value: 'backdrop'
-        }, {
             name: ' Rotate',
             value: ImageOperations.Rotate
         }, {
-            name: ' Create Thumbnail',
+            name: ' Thumbnail',
             value: ImageOperations.Thumbnail
         }]
     },
@@ -106,7 +105,7 @@ export default {
         default: 100,
         validate: (value: string) => {
             let quality = parseInt(value)
-            if (quality != NaN) {
+            if (Number.isInteger(quality)) {
                 if (quality <= 0 || quality > 100) {
                     return 'Enter a value between 1 - 100.'
                 }

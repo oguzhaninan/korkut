@@ -1,11 +1,11 @@
 import * as inquirer from 'inquirer'
-import * as fs from 'fs'
 import * as gm from 'gm'
 import * as Ora from 'ora'
 import Questions from './Questions'
 import FileUtils from './Utils/FileUtils'
 import ImageUtils from './Utils/ImageUtils';
-import { InputType, ImageOperations } from './Types'
+import ImageOperations from "./Enums/ImageOperations";
+import InputType from "./Enums/InputType";
 
 gm.subClass({ imageMagick: true });
 
@@ -37,7 +37,7 @@ export default class Resizer {
     }
 
     async askDirPath(): Promise<void> {
-        let { 
+        let {
             inputDirPath,
             outputDirPath,
         }: any = await inquirer.prompt([Questions.inputDirPath, Questions.outputDirPath]);
@@ -65,12 +65,34 @@ export default class Resizer {
 
     async askImageOperations(): Promise<void> {
         let { operation }: any = await inquirer.prompt([Questions.operations]);
-        
-        // await this.askOutputFilePath()
 
         switch (operation) {
             // Convert
-            case ImageOperations.Convert:
+            case ImageOperations.ChangeQuality: {
+                let { quality }: any = await inquirer.prompt([Questions.quality]);
+
+                this.startSpinner('Processing...');
+                const inputCount: number = this.inputFiles.length;
+
+                for (let i = 0; i < this.inputFiles.length; ++i) {
+                    const filePath: string = this.inputFiles[i];
+                    try {
+                        await ImageUtils.convert({
+                            src: `${this.inputDirPath}/${filePath}`,
+                            dst: `${this.outputDirPath}/new-${filePath}`,
+                            quality: parseInt(quality)
+                        });
+                        this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
+                    } catch (err) {
+                        console.log('err');
+                        this.failSpinner('Failed.');
+                    }
+                }
+                this.succedSpinner('Successfully completed.');     
+            }
+            break;
+            // Convert
+            case ImageOperations.Convert: {
                 let {
                     autoOrient,
                     quality,
@@ -79,7 +101,7 @@ export default class Resizer {
                 this.startSpinner('Processing...');
                 const inputCount: number = this.inputFiles.length;
 
-                for(let i = 0; i < this.inputFiles.length; ++i) {
+                for (let i = 0; i < this.inputFiles.length; ++i) {
                     const filePath: string = this.inputFiles[i];
                     try {
                         await ImageUtils.convert({
@@ -88,16 +110,18 @@ export default class Resizer {
                             quality: parseInt(quality),
                             autoOrient,
                         });
-                        this.spinner.text = `Processing... (${i+1}/${inputCount})`;
-                    } catch(err) {
-                        console.log('err')
+                        this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
+                    } catch (err) {
+                        console.log('err');
+                        this.failSpinner('Failed.');
                     }
                 }
-                this.succedSpinner('Successfully completed.');
-                break;
-                
+                this.succedSpinner('Successfully completed.');                
+            }
+            break;
+
             // Resize
-            case ImageOperations.Resize: 
+            case ImageOperations.Resize:
 
             default:
                 break;
