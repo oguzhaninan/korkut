@@ -7,4 +7,7 @@ export default class ImageUtils {
         return convert(options);
     }
 
+    public static async resize(options: any): Promise<IInfoResult> {
+        return resize(options);
+    }
 }

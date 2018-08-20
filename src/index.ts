@@ -6,11 +6,11 @@ import * as path from 'path';
 import ImageOperations from "./Enums/ImageOperations";
 import InputType from "./Enums/InputType";
 import Questions from './Questions';
+import ConvertQuestions from './Questions/ConvertQuestions';
 import OptimizeQuestions from './Questions/OptimizeQuestions';
+import ResizeQuestions from './Questions/ResizeQuestions';
 import FileUtils from './Utils/FileUtils';
 import ImageUtils from './Utils/ImageUtils';
-import ConvertQuestions from './Questions/ConvertQuestions';
-import ResizeQuestions from './Questions/ResizeQuestions';
 
 gm.subClass({ imageMagick: true });
 
@@ -101,7 +101,7 @@ export default class Resizer {
             // Optimize
             case ImageOperations.Optimize: {
                 const options: any = await inquirer.prompt(OptimizeQuestions);
-                options.quality = parseInt(options.quality);
+                options.quality = parseInt(options.quality, 10);
 
                 this.startSpinner('Processing...');
 
@@ -112,7 +112,7 @@ export default class Resizer {
                     for (let i = 0; i < this.inputFiles.length; ++i) {
                         const fileName: string = this.inputFiles[i];
                         const outputFileName: string =
-                            FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
+                            FileUtils.addPrefixOrSuffix(fileName, this.prefix, this.suffix);
                         try {
                             await ImageUtils.convert({
                                 src: path.join(this.inputDirPath, fileName),
@@ -131,7 +131,7 @@ export default class Resizer {
                         await ImageUtils.convert({
                             src: this.inputFilePath,
                             dst: this.outputFilePath,
-                            quality: parseInt(quality),
+                            ...options,
                         });
                         this.succedSpinner('Successfully completed.');
                     } catch (err) {
@@ -143,7 +143,7 @@ export default class Resizer {
             // Convert
             case ImageOperations.Convert: {
                 const options: any = await inquirer.prompt(ConvertQuestions);
-                options.quality = parseInt(options.quality);
+                options.quality = parseInt(options.quality, 10);
 
                 this.startSpinner('Processing...');
 
@@ -154,7 +154,7 @@ export default class Resizer {
                     for (let i = 0; i < this.inputFiles.length; ++i) {
                         const fileName: string = this.inputFiles[i];
                         const outputFileName: string =
-                            FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
+                            FileUtils.addPrefixOrSuffix(fileName, this.prefix, this.suffix);
                         try {
                             await ImageUtils.convert({
                                 src: path.join(this.inputDirPath, fileName),
@@ -173,8 +173,7 @@ export default class Resizer {
                         await ImageUtils.convert({
                             src: this.inputFilePath,
                             dst: this.outputFilePath,
-                            quality: parseInt(quality),
-                            autoOrient,
+                            ...options,
                         });
                         this.succedSpinner('Successfully completed.');
                     } catch (err) {
@@ -186,7 +185,7 @@ export default class Resizer {
             // Resize
             case ImageOperations.Resize: {
                 const options: any = await inquirer.prompt(ResizeQuestions);
-                options.quality = parseInt(options.quality);
+                options.quality = parseInt(options.quality, 10);
 
                 this.startSpinner('Processing...');
 
@@ -197,9 +196,9 @@ export default class Resizer {
                     for (let i = 0; i < this.inputFiles.length; ++i) {
                         const fileName: string = this.inputFiles[i];
                         const outputFileName: string =
-                            FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
+                            FileUtils.addPrefixOrSuffix(fileName, this.prefix, this.suffix);
                         try {
-                            await ImageUtils.convert({
+                            await ImageUtils.resize({
                                 src: path.join(this.inputDirPath, fileName),
                                 dst: path.join(this.outputDirPath, outputFileName),
                                 ...options,
@@ -213,11 +212,10 @@ export default class Resizer {
                     if (!isFail) { this.succedSpinner('Successfully completed.'); }
                 } else if (this.inputType === InputType.File) {
                     try {
-                        await ImageUtils.convert({
+                        await ImageUtils.resize({
                             src: this.inputFilePath,
                             dst: this.outputFilePath,
-                            quality: parseInt(quality),
-                            autoOrient,
+                            ...options,
                         });
                         this.succedSpinner('Successfully completed.');
                     } catch (err) {

@@ -1,6 +1,7 @@
-import ImageOperations from "./Enums/ImageOperations";
-import InputType from "./Enums/InputType";
-import FileUtils from './Utils/FileUtils';
+import * as chalkPipe from 'chalk-pipe';
+import ImageOperations from "../Enums/ImageOperations";
+import InputType from "../Enums/InputType";
+import FileUtils from '../Utils/FileUtils';
 
 export default {
     inputType: {
@@ -19,7 +20,7 @@ export default {
         type: 'input',
         message: 'Input file path:',
         name: 'inputFilePath',
-        validate: (path: string ) => {
+        validate: (path: string) => {
             if (!FileUtils.exists(path)) {
                 return 'File not exists.';
             } else if (!FileUtils.isImage(path)) {
@@ -39,7 +40,7 @@ export default {
         name: 'inputDirPath',
         validate: (path: string) => {
             try {
-                if (! FileUtils.isDirectory(path)) {
+                if (!FileUtils.isDirectory(path)) {
                     return 'Not directory.';
                 } else {
                     const foundImages = FileUtils.dirFiles(path, FileUtils.IMAGE_FORMATS);
@@ -59,7 +60,7 @@ export default {
         name: 'outputDirPath',
         validate: (path: string) => {
             try {
-                if (! FileUtils.isDirectory(path)) {
+                if (!FileUtils.isDirectory(path)) {
                     return 'Not directory.';
                 }
             } catch (err) {
@@ -98,22 +99,22 @@ export default {
         message: 'What do you want?',
         name: 'operation',
         choices: [{
-            name: ' Optimize',
+            name: 'Optimize',
             value: ImageOperations.Optimize,
         }, {
-            name: ' Convert',
+            name: 'Convert',
             value: ImageOperations.Convert,
         }, {
-            name: ' Crop',
+            name: 'Crop',
             value: ImageOperations.Crop,
         }, {
-            name: ' Resize',
+            name: 'Resize',
             value: ImageOperations.Resize,
         }, {
-            name: ' Rotate',
+            name: 'Rotate',
             value: ImageOperations.Rotate,
         }, {
-            name: ' Thumbnail',
+            name: 'Thumbnail',
             value: ImageOperations.Thumbnail,
         }],
     },
@@ -128,7 +129,7 @@ export default {
         name: 'quality',
         default: 100,
         validate: (value: string) => {
-            const quality = parseInt(value);
+            const quality = parseInt(value, 10);
             if (Number.isInteger(quality)) {
                 if (quality <= 0 || quality > 100) {
                     return 'Enter a value between 1 - 100.';
@@ -143,10 +144,13 @@ export default {
         type: 'input',
         message: 'Background color?',
         name: 'backgroundColor',
+        transformer: (color: string) => {
+            return chalkPipe(color)(color);
+        },
     },
     ignoreAspectRatio: {
         type: 'confirm',
-        message: 'Ignore aspect ratio when resizing.',
+        message: 'Ignore aspect ratio when resizing?',
         name: 'ignoreAspectRatio',
     },
     width: {
