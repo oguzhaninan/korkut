@@ -89,29 +89,43 @@ export default class Resizer {
         let { operation }: any = await inquirer.prompt([Questions.operations]);
 
         switch (operation) {
-            // Convert
+            // Optimize
             case ImageOperations.Optimize: {
                 let { quality }: any = await inquirer.prompt([Questions.quality]);
 
                 this.startSpinner('Processing...');
-                const inputCount: number = this.inputFiles.length;
 
-                for (let i = 0; i < this.inputFiles.length; ++i) {
-                    const fileName: string = this.inputFiles[i];
-                    const outputFileName: string = FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
+                if (this.inputType == InputType.Directory) {
+                    const inputCount: number = this.inputFiles.length;
+                    let isFail: boolean = false;
+                    for (let i = 0; i < this.inputFiles.length; ++i) {
+                        const fileName: string = this.inputFiles[i];
+                        const outputFileName: string = FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
+                        try {
+                            await ImageUtils.convert({
+                                src: path.join(this.inputDirPath, fileName),
+                                dst: path.join(this.outputDirPath, outputFileName),
+                                quality: parseInt(quality),
+                            });
+                            this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
+                        } catch (err) {
+                            isFail = true;
+                            this.failSpinner('Failed.');
+                        }
+                    }
+                    if (!isFail) this.succedSpinner('Successfully completed.');
+                } else if (this.inputType == InputType.File) {
                     try {
                         await ImageUtils.convert({
-                            src: path.join(this.inputDirPath, fileName),
-                            dst: path.join(this.outputDirPath, outputFileName),
+                            src: this.inputFilePath,
+                            dst: this.outputFilePath,
                             quality: parseInt(quality),
                         });
-                        this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
+                        this.succedSpinner('Successfully completed.');
                     } catch (err) {
-                        console.log('err');
                         this.failSpinner('Failed.');
                     }
                 }
-                this.succedSpinner('Successfully completed.');
             }
                 break;
             // Convert
@@ -159,6 +173,7 @@ export default class Resizer {
         switch (inputType) {
             case InputType.File:
                 await this.askInputFilePath();
+                await this.askOutputFilePath();
                 break;
             case InputType.Directory:
                 await this.askDirPath();
