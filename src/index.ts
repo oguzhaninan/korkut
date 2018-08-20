@@ -6,8 +6,11 @@ import * as path from 'path';
 import ImageOperations from "./Enums/ImageOperations";
 import InputType from "./Enums/InputType";
 import Questions from './Questions';
+import OptimizeQuestions from './Questions/OptimizeQuestions';
 import FileUtils from './Utils/FileUtils';
 import ImageUtils from './Utils/ImageUtils';
+import ConvertQuestions from './Questions/ConvertQuestions';
+import ResizeQuestions from './Questions/ResizeQuestions';
 
 gm.subClass({ imageMagick: true });
 
@@ -97,7 +100,8 @@ export default class Resizer {
         switch (operation) {
             // Optimize
             case ImageOperations.Optimize: {
-                const { quality }: any = await inquirer.prompt([Questions.quality]);
+                const options: any = await inquirer.prompt(OptimizeQuestions);
+                options.quality = parseInt(options.quality);
 
                 this.startSpinner('Processing...');
 
@@ -113,7 +117,7 @@ export default class Resizer {
                             await ImageUtils.convert({
                                 src: path.join(this.inputDirPath, fileName),
                                 dst: path.join(this.outputDirPath, outputFileName),
-                                quality: parseInt(quality),
+                                ...options,
                             });
                             this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
                         } catch (err) {
@@ -138,10 +142,8 @@ export default class Resizer {
             break;
             // Convert
             case ImageOperations.Convert: {
-                const {
-                    autoOrient,
-                    quality,
-                }: any = await inquirer.prompt([Questions.autoOrient, Questions.quality]);
+                const options: any = await inquirer.prompt(ConvertQuestions);
+                options.quality = parseInt(options.quality);
 
                 this.startSpinner('Processing...');
 
@@ -157,8 +159,7 @@ export default class Resizer {
                             await ImageUtils.convert({
                                 src: path.join(this.inputDirPath, fileName),
                                 dst: path.join(this.outputDirPath, outputFileName),
-                                quality: parseInt(quality),
-                                autoOrient,
+                                ...options,
                             });
                             this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
                         } catch (err) {
@@ -183,7 +184,47 @@ export default class Resizer {
             }
             break;
             // Resize
-            case ImageOperations.Resize:
+            case ImageOperations.Resize: {
+                const options: any = await inquirer.prompt(ResizeQuestions);
+                options.quality = parseInt(options.quality);
+
+                this.startSpinner('Processing...');
+
+                if (this.inputType === InputType.Directory) {
+                    const inputCount: number = this.inputFiles.length;
+                    let isFail: boolean = false;
+
+                    for (let i = 0; i < this.inputFiles.length; ++i) {
+                        const fileName: string = this.inputFiles[i];
+                        const outputFileName: string =
+                            FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
+                        try {
+                            await ImageUtils.convert({
+                                src: path.join(this.inputDirPath, fileName),
+                                dst: path.join(this.outputDirPath, outputFileName),
+                                ...options,
+                            });
+                            this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
+                        } catch (err) {
+                            isFail = true;
+                            this.failSpinner('Failed.');
+                        }
+                    }
+                    if (!isFail) { this.succedSpinner('Successfully completed.'); }
+                } else if (this.inputType === InputType.File) {
+                    try {
+                        await ImageUtils.convert({
+                            src: this.inputFilePath,
+                            dst: this.outputFilePath,
+                            quality: parseInt(quality),
+                            autoOrient,
+                        });
+                        this.succedSpinner('Successfully completed.');
+                    } catch (err) {
+                        this.failSpinner('Failed.');
+                    }
+                }
+            }
             break;
         }
     }
@@ -196,11 +237,11 @@ export default class Resizer {
             case InputType.File:
                 await this.askInputFilePath();
                 await this.askOutputFilePath();
-                break;
+            break;
             case InputType.Directory:
                 await this.askDirPath();
                 await this.askSuffixOrPrefix();
-                break;
+            break;
         }
     }
 

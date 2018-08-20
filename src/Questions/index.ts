@@ -1,4 +1,3 @@
-import ImageFormats from "./Enums/ImageFormats";
 import ImageOperations from "./Enums/ImageOperations";
 import InputType from "./Enums/InputType";
 import FileUtils from './Utils/FileUtils';
@@ -69,6 +68,31 @@ export default {
             return true;
         },
     },
+    suffix: {
+        type: 'input',
+        message: 'Enter the suffix:',
+        name: 'suffix',
+    },
+    prefix: {
+        type: 'input',
+        message: 'Enter the prefix:',
+        name: 'prefix',
+    },
+    suffixOrPrefix: {
+        type: 'list',
+        message: 'Do you want suffix or prefix?',
+        name: 'suffixOrPrefix',
+        choices: [{
+            name: 'Prefix',
+            value: 'prefix',
+        }, {
+            name: 'Suffix',
+            value: 'suffix',
+        }, {
+            name: 'No',
+            value: 'no',
+        }],
+    },
     operations: {
         type: 'list',
         message: 'What do you want?',
@@ -100,7 +124,7 @@ export default {
     },
     quality: {
         type: 'input',
-        message: 'Set the output quality (1-100):',
+        message: 'Set the output quality (1-100)?',
         name: 'quality',
         default: 100,
         validate: (value: string) => {
@@ -115,29 +139,24 @@ export default {
             return true;
         },
     },
-    suffix: {
+    background: {
         type: 'input',
-        message: 'Enter the suffix:',
-        name: 'suffix',
+        message: 'Background color?',
+        name: 'backgroundColor',
     },
-    prefix: {
+    ignoreAspectRatio: {
+        type: 'confirm',
+        message: 'Ignore aspect ratio when resizing.',
+        name: 'ignoreAspectRatio',
+    },
+    width: {
         type: 'input',
-        message: 'Enter the prefix:',
-        name: 'prefix',
+        message: 'Width?',
+        name: 'width',
     },
-    suffixOrPrefix: {
-        type: 'list',
-        message: 'Do you want suffix or prefix?',
-        name: 'suffixOrPrefix',
-        choices: [{
-            name: 'Prefix',
-            value: 'prefix',
-        }, {
-            name: 'Suffix',
-            value: 'suffix',
-        }, {
-            name: 'No',
-            value: 'no',
-        }],
+    height: {
+        type: 'input',
+        message: 'Height?',
+        name: 'height',
     },
 };
