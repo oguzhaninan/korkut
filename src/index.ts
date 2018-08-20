@@ -31,17 +31,23 @@ export default class Resizer {
         this.spinner = new Ora({ spinner: "bouncingBar" });
     }
 
-    async askInputFilePath(): Promise<void> {
+    public async main(): Promise<void> {
+        await this.askInputType();
+
+        await this.askImageOperations();
+    }
+
+    private async askInputFilePath(): Promise<void> {
         let { inputFilePath }: any = await inquirer.prompt([Questions.inputFilePath]);
         this.inputFilePath = inputFilePath;
     }
 
-    async askOutputFilePath(): Promise<void> {
+    private async askOutputFilePath(): Promise<void> {
         let { outputFilePath }: any = await inquirer.prompt([Questions.outputFilePath]);
         this.outputFilePath = outputFilePath;
     }
 
-    async askSuffixOrPrefix(): Promise<void> {
+    private async askSuffixOrPrefix(): Promise<void> {
         let { suffixOrPrefix }: any = await inquirer.prompt([Questions.suffixOrPrefix]);
 
         switch (suffixOrPrefix) {
@@ -58,7 +64,7 @@ export default class Resizer {
         }
     }
 
-    async askDirPath(): Promise<void> {
+    private async askDirPath(): Promise<void> {
         let {
             inputDirPath,
             outputDirPath,
@@ -73,31 +79,32 @@ export default class Resizer {
         console.log(`Number of image found: ${foundImages.length}`);
     }
 
-    startSpinner(text: string): void {
+    private startSpinner(text: string): void {
         this.spinner.start(text);
     }
 
-    succedSpinner(text: string): void {
+    private succedSpinner(text: string): void {
         this.spinner.succeed(text);
     }
 
-    failSpinner(text: string): void {
+    private failSpinner(text: string): void {
         this.spinner.fail(text);
     }
 
-    async askImageOperations(): Promise<void> {
-        let { operation }: any = await inquirer.prompt([Questions.operations]);
+    private async askImageOperations(): Promise<void> {
+        const { operation }: any = await inquirer.prompt([Questions.operations]);
 
         switch (operation) {
             // Optimize
             case ImageOperations.Optimize: {
-                let { quality }: any = await inquirer.prompt([Questions.quality]);
+                const { quality }: any = await inquirer.prompt([Questions.quality]);
 
                 this.startSpinner('Processing...');
 
-                if (this.inputType == InputType.Directory) {
+                if (this.inputType === InputType.Directory) {
                     const inputCount: number = this.inputFiles.length;
                     let isFail: boolean = false;
+
                     for (let i = 0; i < this.inputFiles.length; ++i) {
                         const fileName: string = this.inputFiles[i];
                         const outputFileName: string = FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
@@ -114,7 +121,7 @@ export default class Resizer {
                         }
                     }
                     if (!isFail) this.succedSpinner('Successfully completed.');
-                } else if (this.inputType == InputType.File) {
+                } else if (this.inputType === InputType.File) {
                     try {
                         await ImageUtils.convert({
                             src: this.inputFilePath,
@@ -127,47 +134,62 @@ export default class Resizer {
                     }
                 }
             }
-                break;
+            break;
             // Convert
             case ImageOperations.Convert: {
-                let {
+                const {
                     autoOrient,
                     quality,
                 }: any = await inquirer.prompt([Questions.autoOrient, Questions.quality]);
 
                 this.startSpinner('Processing...');
-                const inputCount: number = this.inputFiles.length;
 
-                for (let i = 0; i < this.inputFiles.length; ++i) {
-                    const fileName: string = this.inputFiles[i];
-                    const outputFileName: string = FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
+                if (this.inputType === InputType.Directory) {
+                    const inputCount: number = this.inputFiles.length;
+                    let isFail: boolean = false;
+
+                    for (let i = 0; i < this.inputFiles.length; ++i) {
+                        const fileName: string = this.inputFiles[i];
+                        const outputFileName: string = FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
+                        try {
+                            await ImageUtils.convert({
+                                src: path.join(this.inputDirPath, fileName),
+                                dst: path.join(this.outputDirPath, outputFileName),
+                                quality: parseInt(quality),
+                                autoOrient,
+                            });
+                            this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
+                        } catch (err) {
+                            isFail = true;
+                            this.failSpinner('Failed.');
+                        }
+                    }
+                    if (!isFail) this.succedSpinner('Successfully completed.');
+                } else if (this.inputType === InputType.File) {
                     try {
                         await ImageUtils.convert({
-                            src: path.join(this.inputDirPath, fileName),
-                            dst: path.join(this.outputDirPath, outputFileName),
+                            src: this.inputFilePath,
+                            dst: this.outputFilePath,
                             quality: parseInt(quality),
                             autoOrient,
                         });
-                        this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
+                        this.succedSpinner('Successfully completed.');
                     } catch (err) {
-                        console.log('err');
                         this.failSpinner('Failed.');
                     }
                 }
-                this.succedSpinner('Successfully completed.');
             }
-                break;
-
+            break;
             // Resize
-            case ImageOperations.Resize:
-
-            default:
-                break;
+            case ImageOperations.Resize: {
+                
+            }
+            break;
         }
     }
 
-    async askInputType(): Promise<void> {
-        let { inputType }: any = await inquirer.prompt([Questions.inputType]);
+    private async askInputType(): Promise<void> {
+        const { inputType }: any = await inquirer.prompt([Questions.inputType]);
         this.inputType = inputType;
 
         switch (inputType) {
@@ -182,49 +204,6 @@ export default class Resizer {
         }
     }
 
-    async main(): Promise<void> {
-        await this.askInputType();
-
-        await this.askImageOperations();
-    }
-
 }
 
 new Resizer().main();
-
-
-
-//#region gimp 
-/*
- gm('/home/oguzhan/Pictures/foto.jpg')
-    // .blur(10,5)
-    // .chop(500, 500, 100, 10)
-    .borderColor('#444')
-    .border(20, 20)
-    // .charcoal(1)
-    // .colorize(12, 50, 60)
-    // .colors(100)
-    // .crop(600, 300, 20, 20)
-    // .flip()
-    // .flop()
-    // .frame(20, 20, 10, 10)
-    // .gamma(12,1,35)
-    // .geometry(600, 500, '%')
-    // .gravity('Center')
-    // .highlightColor('red')
-    // .fuzz()
-    // .gaussian(12)
-    // .channel('Opacity')
-    // .append('/home/oguzhan/Pictures/icon.png', true)
-    // .watermark(23, 32)
-    .stroke('red', 25)
-    .fill('yellow')
-    .drawRectangle(10, 20, 200, 200, )
-    .fontSize(64)
-    .fill('red')
-    .drawText(20, 30, 'TEXT', 'CENTER')
-    .write('/home/oguzhan/Pictures/foto2.jpg', err => console.log(err))
-
-process.exit() */
-
-//#endregion

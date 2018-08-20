@@ -9,6 +9,7 @@
     "start": "node lib/index.js",
     "test": "ava-ts",
     "build": "tsc",
+    "lint": "tslint -c tslint.json src/**/*.ts",
     "clean": "rm -rf lib/*",
     "run": "yarn run build && clear && yarn start"
   },
@@ -25,6 +26,9 @@
     "@types/ora": "^1.3.4",
     "ava": "^0.25.0",
     "ava-ts": "^0.25.1",
-    "ts-node": "^7.0.1"
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0"
   }
 }
