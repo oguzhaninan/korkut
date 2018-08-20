@@ -1,4 +1,3 @@
-import * as gm from 'gm';
 import * as inquirer from 'inquirer';
 import * as Ora from 'ora';
 import * as path from 'path';
@@ -11,8 +10,6 @@ import OptimizeQuestions from './Questions/OptimizeQuestions';
 import ResizeQuestions from './Questions/ResizeQuestions';
 import FileUtils from './Utils/FileUtils';
 import ImageUtils from './Utils/ImageUtils';
-
-gm.subClass({ imageMagick: true });
 
 export default class Resizer {
 
@@ -114,7 +111,7 @@ export default class Resizer {
                         const outputFileName: string =
                             FileUtils.addPrefixOrSuffix(fileName, this.prefix, this.suffix);
                         try {
-                            await ImageUtils.convert({
+                            await ImageUtils.optimize({
                                 src: path.join(this.inputDirPath, fileName),
                                 dst: path.join(this.outputDirPath, outputFileName),
                                 ...options,
