@@ -5,9 +5,9 @@ gm.subClass({ imageMagick: true });
 
 export default class ImageUtils {
 
-    public static async procces(options: any, cb: any): Promise<void> {
+    public static async procces(options: any, cb: (img: gm.State) => void): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const img: any = gm(options.src);
+            const img: gm.State = gm(options.src);
             cb(img);
             img.write(options.dst, (err, stdout, stderr, cmd) => {
                 // console.log(err);
@@ -17,7 +17,7 @@ export default class ImageUtils {
     }
 
     public static async optimize(options: any): Promise<void> {
-        return this.procces(options, (img) => {
+        return this.procces(options, (img: gm.State): void => {
             img.quality(options.quality);
         });
     }
