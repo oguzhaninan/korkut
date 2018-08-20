@@ -21,7 +21,7 @@ export default class FileUtils {
     }
 
     public static filterSuffix(items: string[], suffixes: string[]): string[] {
-        return items.filter(item => suffixes.indexOf(this.getSuffix(item)) !== -1);
+        return items.filter((item) => suffixes.indexOf(this.getSuffix(item)) !== -1);
     }
 
     public static dirFiles(path: string, suffixes?: string[]): string[] {
@@ -35,8 +35,8 @@ export default class FileUtils {
     }
 
     public static addPrefixOrSuffix(fileName: string, prefix: string, suffix?: string): string {
-        if (prefix) fileName = prefix + fileName;
-        
+        if (prefix) { fileName = prefix + fileName; }
+
         if (suffix) {
             const temp = fileName
                 .split('.')
@@ -45,7 +45,7 @@ export default class FileUtils {
             fileName = temp.reverse()
                 .join('.');
         }
-        
+
         return fileName;
     }
 }

@@ -9,7 +9,8 @@
     "start": "node lib/index.js",
     "test": "ava-ts",
     "build": "tsc",
-    "lint": "tslint -c tslint.json src/**/*.ts",
+    "lint": "tslint -c tslint.json src/**/*.ts src/*.ts",
+    "lint:fix": "yarn run lint --fix",
     "clean": "rm -rf lib/*",
     "run": "yarn run build && clear && yarn start"
   },

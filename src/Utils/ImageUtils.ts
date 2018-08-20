@@ -1,9 +1,9 @@
-import FileUtils from './FileUtils'
-import { convert, crop, rescrop, resize, thumbnail, rotate, info, IInfoResult } from 'easyimage'
+import { convert, crop, IInfoResult, info, rescrop, resize, rotate, thumbnail } from 'easyimage';
+import FileUtils from './FileUtils';
 
 export default class ImageUtils {
 
-    static async convert(options: any): Promise<IInfoResult> {
+    public static async convert(options: any): Promise<IInfoResult> {
         return convert(options);
     }
 

@@ -1,13 +1,13 @@
-import * as inquirer from 'inquirer'
-import * as gm from 'gm'
-import * as Ora from 'ora'
-import * as path from 'path'
+import * as gm from 'gm';
+import * as inquirer from 'inquirer';
+import * as Ora from 'ora';
+import * as path from 'path';
 
-import Questions from './Questions'
-import FileUtils from './Utils/FileUtils'
-import ImageUtils from './Utils/ImageUtils'
-import ImageOperations from "./Enums/ImageOperations"
-import InputType from "./Enums/InputType"
+import ImageOperations from "./Enums/ImageOperations";
+import InputType from "./Enums/InputType";
+import Questions from './Questions';
+import FileUtils from './Utils/FileUtils';
+import ImageUtils from './Utils/ImageUtils';
 
 gm.subClass({ imageMagick: true });
 
@@ -38,25 +38,25 @@ export default class Resizer {
     }
 
     private async askInputFilePath(): Promise<void> {
-        let { inputFilePath }: any = await inquirer.prompt([Questions.inputFilePath]);
+        const { inputFilePath }: any = await inquirer.prompt([Questions.inputFilePath]);
         this.inputFilePath = inputFilePath;
     }
 
     private async askOutputFilePath(): Promise<void> {
-        let { outputFilePath }: any = await inquirer.prompt([Questions.outputFilePath]);
+        const { outputFilePath }: any = await inquirer.prompt([Questions.outputFilePath]);
         this.outputFilePath = outputFilePath;
     }
 
     private async askSuffixOrPrefix(): Promise<void> {
-        let { suffixOrPrefix }: any = await inquirer.prompt([Questions.suffixOrPrefix]);
+        const { suffixOrPrefix }: any = await inquirer.prompt([Questions.suffixOrPrefix]);
 
         switch (suffixOrPrefix) {
             case 'suffix':
-                let { suffix }: any = await inquirer.prompt([Questions.suffix]);
+                const { suffix }: any = await inquirer.prompt([Questions.suffix]);
                 this.suffix = suffix;
                 break;
             case 'prefix':
-                let { prefix }: any = await inquirer.prompt([Questions.prefix]);
+                const { prefix }: any = await inquirer.prompt([Questions.prefix]);
                 this.prefix = prefix;
                 break;
             default:
@@ -65,12 +65,12 @@ export default class Resizer {
     }
 
     private async askDirPath(): Promise<void> {
-        let {
+        const {
             inputDirPath,
             outputDirPath,
         }: any = await inquirer.prompt([Questions.inputDirPath, Questions.outputDirPath]);
 
-        let foundImages = FileUtils.dirFiles(inputDirPath, FileUtils.IMAGE_FORMATS);
+        const foundImages = FileUtils.dirFiles(inputDirPath, FileUtils.IMAGE_FORMATS);
 
         this.inputDirPath = inputDirPath;
         this.outputDirPath = outputDirPath;
@@ -107,7 +107,8 @@ export default class Resizer {
 
                     for (let i = 0; i < this.inputFiles.length; ++i) {
                         const fileName: string = this.inputFiles[i];
-                        const outputFileName: string = FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
+                        const outputFileName: string =
+                            FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
                         try {
                             await ImageUtils.convert({
                                 src: path.join(this.inputDirPath, fileName),
@@ -120,7 +121,7 @@ export default class Resizer {
                             this.failSpinner('Failed.');
                         }
                     }
-                    if (!isFail) this.succedSpinner('Successfully completed.');
+                    if (!isFail) { this.succedSpinner('Successfully completed.'); }
                 } else if (this.inputType === InputType.File) {
                     try {
                         await ImageUtils.convert({
@@ -150,7 +151,8 @@ export default class Resizer {
 
                     for (let i = 0; i < this.inputFiles.length; ++i) {
                         const fileName: string = this.inputFiles[i];
-                        const outputFileName: string = FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
+                        const outputFileName: string =
+                            FileUtils.addPrefixOrSuffix(this.inputFiles[i], this.prefix, this.suffix);
                         try {
                             await ImageUtils.convert({
                                 src: path.join(this.inputDirPath, fileName),
@@ -164,7 +166,7 @@ export default class Resizer {
                             this.failSpinner('Failed.');
                         }
                     }
-                    if (!isFail) this.succedSpinner('Successfully completed.');
+                    if (!isFail) { this.succedSpinner('Successfully completed.'); }
                 } else if (this.inputType === InputType.File) {
                     try {
                         await ImageUtils.convert({
@@ -181,9 +183,7 @@ export default class Resizer {
             }
             break;
             // Resize
-            case ImageOperations.Resize: {
-                
-            }
+            case ImageOperations.Resize:
             break;
         }
     }

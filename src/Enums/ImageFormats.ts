@@ -4,7 +4,7 @@
 enum ImageFormats {
     JPEG = 'jpeg',
     PNG = 'png',
-    BITMAP = 'bmp'
+    BITMAP = 'bmp',
 }
 
 export default ImageFormats;

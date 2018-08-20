@@ -3,7 +3,7 @@
  */
 enum InputType {
     File = 'file',
-    Directory = 'directory'
+    Directory = 'directory',
 }
 
 export default InputType;
