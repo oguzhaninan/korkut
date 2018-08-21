@@ -22,11 +22,42 @@ export default class ImageUtils {
         });
     }
 
-    public static async convert(options: any): Promise<IInfoResult> {
-        return resize(options);
+    public static async convert(options: any): Promise<void> {
+        return this.procces(options, (img: gm.State): void => {
+            if (options.autoOrient) { img.autoOrient(); }
+            img.quality(options.quality);
+        });
     }
 
-    public static async resize(options: any): Promise<IInfoResult> {
-        return resize(options);
+    public static async resize(options: any): Promise<void> {
+        return this.procces(options, (img: gm.State): void => {
+            if (options.autoOrient) { img.autoOrient(); }
+            img.quality(options.quality);
+            const resizeOpt: any = options.ignoreAspectRatio ? '!' : '';
+            img.resize(options.width, options.height, resizeOpt);
+        });
+    }
+
+    public static async rotate(options: any): Promise<void> {
+        return this.procces(options, (img: gm.State): void => {
+            if (options.autoOrient) { img.autoOrient(); }
+            img.quality(options.quality);
+            img.rotate(options.backgroundColor, options.degrees);
+        });
+    }
+
+    public static async crop(options: any): Promise<void> {
+        return this.procces(options, (img: gm.State): void => {
+            if (options.autoOrient) {
+                img.autoOrient();
+            }
+            if (options.isDirection) {
+                img.gravity(options.direction);
+                img.crop(options.width, options.height);
+            } else {
+                img.crop(options.width, options.height, options.x, options.y);
+            }
+            img.quality(options.quality);
+        });
     }
 }

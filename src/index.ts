@@ -6,8 +6,10 @@ import ImageOperations from "./Enums/ImageOperations";
 import InputType from "./Enums/InputType";
 import Questions from './Questions';
 import ConvertQuestions from './Questions/ConvertQuestions';
+import CropQuestions from './Questions/CropQuestions';
 import OptimizeQuestions from './Questions/OptimizeQuestions';
 import ResizeQuestions from './Questions/ResizeQuestions';
+import RotateQuestions from './Questions/RotateQuestions';
 import FileUtils from './Utils/FileUtils';
 import ImageUtils from './Utils/ImageUtils';
 
@@ -99,24 +101,39 @@ export default class Resizer {
             // Optimize
             case ImageOperations.Optimize: {
                 options = await inquirer.prompt(OptimizeQuestions);
-                options.quality = parseInt(options.quality, 10);
             }
                 break;
             // Convert
             case ImageOperations.Convert: {
                 options = await inquirer.prompt(ConvertQuestions);
-                options.quality = parseInt(options.quality, 10);
             }
                 break;
             // Resize
             case ImageOperations.Resize: {
                 options = await inquirer.prompt(ResizeQuestions);
-                options.quality = parseInt(options.quality, 10);
+            }
+                break;
+            // Rotate
+            case ImageOperations.Rotate: {
+                options = await inquirer.prompt(RotateQuestions);
+            }
+                break;
+            // Crop
+            case ImageOperations.Crop: {
+                options = await inquirer.prompt(CropQuestions);
+                if (options.isSetDirection) {
+                    const { direction }: any = await inquirer.prompt([Questions.direction]);
+                    options.direction = direction;
+                } else {
+                    const position: any = await inquirer.prompt([Questions.x, Questions.y]);
+                    options.x = position.x;
+                    options.y = position.y;
+                }
             }
                 break;
         }
 
-        this.startSpinner('Processing...');
+        this.startSpinner('Processing…');
 
         switch (this.inputType) {
             case InputType.Directory: {
@@ -132,7 +149,7 @@ export default class Resizer {
                             dst: path.join(this.outputDirPath, outputFileName),
                             ...options,
                         });
-                        this.spinner.text = `Processing... (${i + 1}/${inputCount})`;
+                        this.spinner.text = `Processing… (${i + 1}/${inputCount})`;
                     } catch (err) {
                         isFail = true;
                         this.failSpinner('Failed.');

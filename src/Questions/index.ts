@@ -123,13 +123,34 @@ export default {
         message: 'Auto orientate the image?',
         name: 'autoOrient',
     },
+    isSetDirection: {
+        type: 'confirm',
+        message: 'Would you like to set direction?',
+        name: 'isSetDirection',
+    },
+    direction: {
+        type: 'list',
+        message: 'Select the direction?',
+        name: 'direction',
+        choices: [
+            { name: 'NorthWest', value: 'NorthWest' },
+            { name: 'North', value: 'North' },
+            { name: 'NorthEast', value: 'NorthEast' },
+            { name: 'West', value: 'West' },
+            { name: 'Center', value: 'Center' },
+            { name: 'East', value: 'East' },
+            { name: 'SouthWest', value: 'SouthWest' },
+            { name: 'South', value: 'South' },
+            { name: 'SouthEast', value: 'SouthEast' },
+        ],
+    },
     quality: {
         type: 'input',
         message: 'Set the output quality (1-100)?',
         name: 'quality',
         default: 100,
-        validate: (value: string) => {
-            const quality = parseInt(value, 10);
+        validate: (value: string): any => {
+            const quality: number = parseInt(value, 10);
             if (Number.isInteger(quality)) {
                 if (quality <= 0 || quality > 100) {
                     return 'Enter a value between 1 - 100.';
@@ -140,12 +161,28 @@ export default {
             return true;
         },
     },
-    background: {
+    backgroundColor: {
         type: 'input',
-        message: 'Background color?',
+        message: 'Background color:',
         name: 'backgroundColor',
-        transformer: (color: string) => {
+        transformer: (color: string): any => {
             return chalkPipe(color)(color);
+        },
+    },
+    degrees: {
+        type: 'input',
+        message: 'Degrees:',
+        name: 'degrees',
+        validate: (value: string): any => {
+            const quality: number = parseInt(value, 10);
+            if (Number.isInteger(quality)) {
+                if (quality <= 0 || quality > 360) {
+                    return 'Enter a value between 1 - 360.';
+                }
+            } else {
+                return 'Type the number.';
+            }
+            return true;
         },
     },
     ignoreAspectRatio: {
@@ -162,5 +199,37 @@ export default {
         type: 'input',
         message: 'Height?',
         name: 'height',
+    },
+    x: {
+        type: 'input',
+        message: 'Left distance of crop:',
+        name: 'x',
+        validate: (value: string): any => {
+            const quality: number = parseInt(value, 10);
+            if (Number.isInteger(quality)) {
+                if (quality < 0) {
+                    return 'Must be greater than 0.';
+                }
+            } else {
+                return 'Type the number.';
+            }
+            return true;
+        },
+    },
+    y: {
+        type: 'input',
+        message: 'Top distance of crop:',
+        name: 'y',
+        validate: (value: string): any => {
+            const quality: number = parseInt(value, 10);
+            if (Number.isInteger(quality)) {
+                if (quality < 0) {
+                    return 'Must be greater than 0.';
+                }
+            } else {
+                return 'Type the number.';
+            }
+            return true;
+        },
     },
 };
