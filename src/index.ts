@@ -142,15 +142,15 @@ export default class Resizer {
                 for (let i = 0; i < this.inputFiles.length; ++i) {
                     const fileName: string = this.inputFiles[i];
                     let outputFileName: string = FileUtils.addPrefixOrSuffix(fileName, this.prefix, this.suffix);
+
                     if (options.outputType) {
                         outputFileName = FileUtils.changeExtension(outputFileName, options.outputType);
                     }
                     try {
-                        await ImageUtils[operation]({
-                            src: path.join(this.inputDirPath, fileName),
-                            dst: path.join(this.outputDirPath, outputFileName),
-                            ...options,
-                        });
+                        options.src = path.join(this.inputDirPath, fileName);
+                        options.dst = path.join(this.outputDirPath, outputFileName);
+                        await ImageUtils[operation](options);
+
                         this.spinner.text = `Processing… (${i + 1}/${inputCount}) - ${outputFileName}`;
                     } catch (err) {
                         isFail = true;
@@ -162,11 +162,10 @@ export default class Resizer {
                 break;
             case InputType.File: {
                 try {
-                    await ImageUtils[operation]({
-                        src: this.inputFilePath,
-                        dst: this.outputFilePath,
-                        ...options,
-                    });
+                    options.src = this.inputFilePath;
+                    options.dst = this.outputFilePath;
+                    await ImageUtils[operation](options);
+
                     this.succedSpinner('Successfully completed.');
                 } catch (err) {
                     this.failSpinner('Failed.');
