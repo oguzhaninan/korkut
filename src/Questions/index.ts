@@ -1,5 +1,6 @@
 import * as chalkPipe from 'chalk-pipe';
 import ImageOperations from "../Enums/ImageOperations";
+import InputOutputFormats from '../Enums/InputOutputFormats';
 import InputType from "../Enums/InputType";
 import FileUtils from '../Utils/FileUtils';
 
@@ -113,9 +114,6 @@ export default {
         }, {
             name: 'Rotate',
             value: ImageOperations.Rotate,
-        }, {
-            name: 'Thumbnail',
-            value: ImageOperations.Thumbnail,
         }],
     },
     autoOrient: {
@@ -142,6 +140,17 @@ export default {
             { name: 'SouthWest', value: 'SouthWest' },
             { name: 'South', value: 'South' },
             { name: 'SouthEast', value: 'SouthEast' },
+        ],
+    },
+    outputType: {
+        type: 'list',
+        message: 'Select the file extension',
+        name: 'outputType',
+        choices: [
+            { name: 'Bitmap (.bmp)', value: InputOutputFormats.BITMAP },
+            { name: 'JPG (.jpg)', value: InputOutputFormats.JPG },
+            { name: 'PNG (.png)', value: InputOutputFormats.PNG },
+            { name: 'PDF (.pdf)', value: InputOutputFormats.PDF },
         ],
     },
     quality: {

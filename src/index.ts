@@ -126,8 +126,7 @@ export default class Resizer {
                     options.direction = direction;
                 } else {
                     const position: any = await inquirer.prompt([Questions.x, Questions.y]);
-                    options.x = position.x;
-                    options.y = position.y;
+                    Object.keys(position).forEach((key: string): void => options[key] = position[key]);
                 }
             }
                 break;
@@ -142,14 +141,17 @@ export default class Resizer {
 
                 for (let i = 0; i < this.inputFiles.length; ++i) {
                     const fileName: string = this.inputFiles[i];
-                    const outputFileName: string = FileUtils.addPrefixOrSuffix(fileName, this.prefix, this.suffix);
+                    let outputFileName: string = FileUtils.addPrefixOrSuffix(fileName, this.prefix, this.suffix);
+                    if (options.outputType) {
+                        outputFileName = FileUtils.changeExtension(outputFileName, options.outputType);
+                    }
                     try {
                         await ImageUtils[operation]({
                             src: path.join(this.inputDirPath, fileName),
                             dst: path.join(this.outputDirPath, outputFileName),
                             ...options,
                         });
-                        this.spinner.text = `Processing… (${i + 1}/${inputCount})`;
+                        this.spinner.text = `Processing… (${i + 1}/${inputCount}) - ${outputFileName}`;
                     } catch (err) {
                         isFail = true;
                         this.failSpinner('Failed.');

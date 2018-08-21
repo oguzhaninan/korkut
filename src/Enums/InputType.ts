@@ -1,5 +1,5 @@
 /**
- *
+ * Input Types
  */
 enum InputType {
     File = 'file',

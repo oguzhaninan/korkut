@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import InputOutputFormats from '../Enums/InputOutputFormats';
 
 export default class FileUtils {
 
@@ -48,4 +49,11 @@ export default class FileUtils {
 
         return fileName;
     }
+
+    public static changeExtension(outputFileName: string, outputType: InputOutputFormats): string {
+        const temp: string[] = outputFileName.split('.').reverse();
+        temp.splice(0, 1, outputType);
+        return temp.reverse().join('.');
+    }
+
 }
