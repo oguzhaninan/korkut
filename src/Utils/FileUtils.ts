@@ -24,7 +24,7 @@ export default class FileUtils {
 
     public static filterSuffix(items: string[], suffix: string[] | string): string[] {
         suffix = Array.isArray(suffix) ? suffix : [suffix];
-        return items.filter((item) => suffix.indexOf(this.getSuffix(item)) !== -1);
+        return items.filter((item) => suffix.indexOf(this.getSuffix(item).toLowerCase()) !== -1);
     }
 
     public static dirFiles(path: string, suffix?: string[] | string): string[] {

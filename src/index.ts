@@ -88,7 +88,7 @@ export default class Resizer {
             return counts;
         }, []);
 
-        const msg: string = `> Number of file found: ${foundFiles.length} \n> ${info.join(' | ')}`;
+        const msg: string = `> Number of file found: ${foundFiles.length}\n> ${info.join(' | ')}`;
         console.log(chalk('royalblue.bold')(msg));
     }
 

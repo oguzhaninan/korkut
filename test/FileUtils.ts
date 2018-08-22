@@ -1,7 +1,7 @@
 import test from 'ava';
 
 import FileUtils from '../src/Utils/FileUtils';
-import InputOutputFormats from '../src/Enums/InputOutputFormats';
+import InputFormats from '../src/Enums/InputFormats';
 
 test('suffix or prefix add', (t) => {
     const newName: string = FileUtils.addPrefixOrSuffix('example.jpg', 'foo-', '-bar');
@@ -36,19 +36,21 @@ test('filter suffix', (t) => {
 });
 
 test('is image', (t) => {
-    t.is(FileUtils.isImage('example.jpg'), true);
-    t.is(FileUtils.isImage('example.2-0.jpeg'), true);
-    t.is(FileUtils.isImage('/home/foo/example.png'), true);
-    t.is(FileUtils.isImage('example.bmp'), true);
+    t.is(FileUtils.isSupportedFile('example.jpg'), true);
+    t.is(FileUtils.isSupportedFile('example.2-0.jpeg'), true);
+    t.is(FileUtils.isSupportedFile('/home/foo/example.png'), true);
+    t.is(FileUtils.isSupportedFile('/home/foo/example.PNG'), true);
+    t.is(FileUtils.isSupportedFile('/home/foo/example.JPEG'), true);
+    t.is(FileUtils.isSupportedFile('example.bmp'), true);
 });
 
 test('change extension', (t) => {
-    const file1: string = FileUtils.changeExtension('foo.jpg', InputOutputFormats.BITMAP);
+    const file1: string = FileUtils.changeExtension('foo.jpg', InputFormats.BITMAP);
     t.is(file1, 'foo.bmp');
 
-    const file2: string = FileUtils.changeExtension('foo-bar.example.jpg', InputOutputFormats.PNG);
+    const file2: string = FileUtils.changeExtension('foo-bar.example.jpg', InputFormats.PNG);
     t.is(file2, 'foo-bar.example.png');
 
-    const file3: string = FileUtils.changeExtension('/home/bar/foo-bar.example.jpg', InputOutputFormats.PNG);
+    const file3: string = FileUtils.changeExtension('/home/bar/foo-bar.example.jpg', InputFormats.PNG);
     t.is(file3, '/home/bar/foo-bar.example.png');
 });
