@@ -1,14 +1,14 @@
 /**
- * Input Output Formats
+ * Input Formats
  */
-enum InputOutputFormats {
+enum InputFormats {
     JPG = 'jpg',
     JPEG = 'jpeg',
     TIFF = 'tiff',
     PNG = 'png',
-    SVG = 'svg',
+    // SVG = 'svg',
     BITMAP = 'bmp',
     PDF = 'pdf',
 }
 
-export default InputOutputFormats;
+export default InputFormats;

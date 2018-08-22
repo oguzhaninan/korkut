@@ -4,7 +4,7 @@ import * as Ora from 'ora';
 import * as path from 'path';
 
 import ImageOperations from "./Enums/ImageOperations";
-import InputOutputFormats from './Enums/InputOutputFormats';
+import InputOutputFormats from './Enums/InputFormats';
 import InputType from "./Enums/InputType";
 import Questions from './Questions';
 import ConvertQuestions from './Questions/ConvertQuestions';
@@ -85,6 +85,7 @@ export default class Resizer {
             if (fileCount > 0) {
                 counts.push(`${key}: ${fileCount}`);
             }
+            return counts;
         }, []);
 
         const msg: string = `> Number of file found: ${foundFiles.length} \n> ${info.join(' | ')}`;

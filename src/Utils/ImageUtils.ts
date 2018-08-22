@@ -22,7 +22,7 @@ export default class ImageUtils {
         });
     }
 
-    public static async convert(options: any): Promise<void> {
+    public static async convert(options: any): Promise<any> {
         return this.procces(options, (img: gm.State): void => {
             if (options.autoOrient) { img.autoOrient(); }
             img.quality(options.quality);

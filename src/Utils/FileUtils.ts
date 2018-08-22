@@ -1,9 +1,10 @@
 import * as fs from 'fs';
-import InputOutputFormats from '../Enums/InputOutputFormats';
+import InputFormats from '../Enums/InputFormats';
 
 export default class FileUtils {
 
-    public static readonly INPUT_FORMATS: string[] = ['jpg', 'jpeg', 'png', 'bmp', 'svg', 'tiff', 'pdf'];
+    public static readonly INPUT_FORMATS: string[] = Object.keys(InputFormats)
+        .map((key): string => InputFormats[key]);
 
     public static isDirectory(path: string): boolean {
         return fs.lstatSync(path).isDirectory();
@@ -53,7 +54,7 @@ export default class FileUtils {
         return fileName;
     }
 
-    public static changeExtension(outputFileName: string, outputType: InputOutputFormats): string {
+    public static changeExtension(outputFileName: string, outputType: InputFormats): string {
         const temp: string[] = outputFileName.split('.').reverse();
         temp.splice(0, 1, outputType);
         return temp.reverse().join('.');

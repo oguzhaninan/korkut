@@ -1,6 +1,6 @@
 import * as chalkPipe from 'chalk-pipe';
 import ImageOperations from "../Enums/ImageOperations";
-import InputOutputFormats from '../Enums/InputOutputFormats';
+import InputFormats from '../Enums/InputFormats';
 import InputType from "../Enums/InputType";
 import FileUtils from '../Utils/FileUtils';
 
@@ -146,14 +146,11 @@ export default {
         type: 'list',
         message: 'The file format to be converted:',
         name: 'outputType',
-        choices: [
-            { name: 'Bitmap (.bmp)', value: InputOutputFormats.BITMAP },
-            { name: 'JPG (.jpg)', value: InputOutputFormats.JPG },
-            { name: 'PNG (.png)', value: InputOutputFormats.PNG },
-            { name: 'SVG (.svg)', value: InputOutputFormats.SVG },
-            { name: 'TIFF (.tiff)', value: InputOutputFormats.TIFF },
-            { name: 'PDF (.pdf)', value: InputOutputFormats.PDF },
-        ],
+        choices: Object.keys(InputFormats)
+            .map((key): any => ({
+                name: `${key} (.${InputFormats[key]})`,
+                value: `${InputFormats[key]}`,
+            })),
     },
     quality: {
         type: 'input',
