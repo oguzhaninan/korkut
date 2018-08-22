@@ -1,8 +1,10 @@
+import * as chalk from 'chalk-pipe';
 import * as inquirer from 'inquirer';
 import * as Ora from 'ora';
 import * as path from 'path';
 
 import ImageOperations from "./Enums/ImageOperations";
+import InputOutputFormats from './Enums/InputOutputFormats';
 import InputType from "./Enums/InputType";
 import Questions from './Questions';
 import ConvertQuestions from './Questions/ConvertQuestions';
@@ -72,13 +74,19 @@ export default class Resizer {
             outputDirPath,
         }: any = await inquirer.prompt([Questions.inputDirPath, Questions.outputDirPath]);
 
-        const foundImages = FileUtils.dirFiles(inputDirPath, FileUtils.IMAGE_FORMATS);
+        const foundFiles = FileUtils.dirFiles(inputDirPath, FileUtils.INPUT_FORMATS);
+        const bmpFiles = FileUtils.filterSuffix(foundFiles, InputOutputFormats.BITMAP);
+        const jpgFiles = FileUtils.filterSuffix(foundFiles, [InputOutputFormats.JPG, InputOutputFormats.JPEG]);
+        const pngFiles = FileUtils.filterSuffix(foundFiles, InputOutputFormats.PNG);
+        const pdfFiles = FileUtils.filterSuffix(foundFiles, InputOutputFormats.PDF);
 
         this.inputDirPath = inputDirPath;
         this.outputDirPath = outputDirPath;
-        this.inputFiles = foundImages;
+        this.inputFiles = foundFiles;
 
-        console.log(`Number of image found: ${foundImages.length}`);
+        const msg: string = `> Number of file found: ${foundFiles.length}
+> BITMAP: ${bmpFiles.length} | JPG: ${jpgFiles.length} | PNG: ${pngFiles.length} | PDF: ${pdfFiles.length}`;
+        console.log(chalk('royalblue.bold')(msg));
     }
 
     private startSpinner(text: string): void {

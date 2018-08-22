@@ -24,8 +24,8 @@ export default {
         validate: (path: string) => {
             if (!FileUtils.exists(path)) {
                 return 'File not exists.';
-            } else if (!FileUtils.isImage(path)) {
-                return 'File is not image.';
+            } else if (!FileUtils.isSupportedFile(path)) {
+                return 'File is not supported.';
             }
             return true;
         },
@@ -44,7 +44,7 @@ export default {
                 if (!FileUtils.isDirectory(path)) {
                     return 'Not directory.';
                 } else {
-                    const foundImages = FileUtils.dirFiles(path, FileUtils.IMAGE_FORMATS);
+                    const foundImages = FileUtils.dirFiles(path, FileUtils.INPUT_FORMATS);
                     if (foundImages.length === 0) {
                         return 'Not found image.';
                     }
@@ -144,12 +144,14 @@ export default {
     },
     outputType: {
         type: 'list',
-        message: 'Select the file extension',
+        message: 'The file format to be converted:',
         name: 'outputType',
         choices: [
             { name: 'Bitmap (.bmp)', value: InputOutputFormats.BITMAP },
             { name: 'JPG (.jpg)', value: InputOutputFormats.JPG },
             { name: 'PNG (.png)', value: InputOutputFormats.PNG },
+            { name: 'SVG (.svg)', value: InputOutputFormats.SVG },
+            { name: 'TIFF (.tiff)', value: InputOutputFormats.TIFF },
             { name: 'PDF (.pdf)', value: InputOutputFormats.PDF },
         ],
     },

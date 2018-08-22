@@ -3,7 +3,7 @@ import InputOutputFormats from '../Enums/InputOutputFormats';
 
 export default class FileUtils {
 
-    public static readonly IMAGE_FORMATS: string[] = ['jpg', 'jpeg', 'png', 'bmp'];
+    public static readonly INPUT_FORMATS: string[] = ['jpg', 'jpeg', 'png', 'bmp', 'svg', 'tiff', 'pdf'];
 
     public static isDirectory(path: string): boolean {
         return fs.lstatSync(path).isDirectory();
@@ -13,23 +13,26 @@ export default class FileUtils {
         return fs.existsSync(path);
     }
 
-    public static isImage(fileName: string): boolean {
-        return this.filterSuffix([fileName], this.IMAGE_FORMATS).length !== 0;
+    public static isSupportedFile(fileName: string): boolean {
+        return this.filterSuffix([fileName], this.INPUT_FORMATS).length !== 0;
     }
 
     public static getSuffix(fileName: string): string {
         return fileName.split('.').pop();
     }
 
-    public static filterSuffix(items: string[], suffixes: string[]): string[] {
-        return items.filter((item) => suffixes.indexOf(this.getSuffix(item)) !== -1);
+    public static filterSuffix(items: string[], suffix: string[] | string): string[] {
+        suffix = Array.isArray(suffix) ? suffix : [suffix];
+        return items.filter((item) => suffix.indexOf(this.getSuffix(item)) !== -1);
     }
 
-    public static dirFiles(path: string, suffixes?: string[]): string[] {
+    public static dirFiles(path: string, suffix?: string[] | string): string[] {
         const files = fs.readdirSync(path);
 
-        if (suffixes) {
-            return this.filterSuffix(files, suffixes);
+        suffix = Array.isArray(suffix) ? suffix : [suffix];
+
+        if (suffix) {
+            return this.filterSuffix(files, suffix);
         } else {
             return files;
         }
