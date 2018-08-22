@@ -75,17 +75,19 @@ export default class Resizer {
         }: any = await inquirer.prompt([Questions.inputDirPath, Questions.outputDirPath]);
 
         const foundFiles = FileUtils.dirFiles(inputDirPath, FileUtils.INPUT_FORMATS);
-        const bmpFiles = FileUtils.filterSuffix(foundFiles, InputOutputFormats.BITMAP);
-        const jpgFiles = FileUtils.filterSuffix(foundFiles, [InputOutputFormats.JPG, InputOutputFormats.JPEG]);
-        const pngFiles = FileUtils.filterSuffix(foundFiles, InputOutputFormats.PNG);
-        const pdfFiles = FileUtils.filterSuffix(foundFiles, InputOutputFormats.PDF);
 
         this.inputDirPath = inputDirPath;
         this.outputDirPath = outputDirPath;
         this.inputFiles = foundFiles;
 
-        const msg: string = `> Number of file found: ${foundFiles.length}
-> BITMAP: ${bmpFiles.length} | JPG: ${jpgFiles.length} | PNG: ${pngFiles.length} | PDF: ${pdfFiles.length}`;
+        const info: string[] = Object.keys(InputOutputFormats).reduce((counts: string[], key: string): any => {
+            const fileCount: number = FileUtils.filterSuffix(foundFiles, InputOutputFormats[key]).length;
+            if (fileCount > 0) {
+                counts.push(`${key}: ${fileCount}`);
+            }
+        }, []);
+
+        const msg: string = `> Number of file found: ${foundFiles.length} \n> ${info.join(' | ')}`;
         console.log(chalk('royalblue.bold')(msg));
     }
 
