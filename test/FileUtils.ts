@@ -35,7 +35,7 @@ test('filter suffix', (t) => {
     t.deepEqual(filterPNG, ['three.3.png']);
 });
 
-test('is image', (t) => {
+test('is supported file', (t) => {
     t.is(FileUtils.isSupportedFile('example.jpg'), true);
     t.is(FileUtils.isSupportedFile('example.2-0.jpeg'), true);
     t.is(FileUtils.isSupportedFile('/home/foo/example.png'), true);
