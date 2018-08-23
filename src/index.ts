@@ -4,7 +4,7 @@ import * as Ora from 'ora';
 import * as path from 'path';
 
 import ImageOperations from "./Enums/ImageOperations";
-import InputOutputFormats from './Enums/InputFormats';
+import InputFormats from './Enums/InputFormats';
 import InputType from "./Enums/InputType";
 import Questions from './Questions';
 import ConvertQuestions from './Questions/ConvertQuestions';
@@ -78,19 +78,28 @@ export default class Resizer {
 
         this.inputDirPath = inputDirPath;
         this.outputDirPath = outputDirPath;
-        this.inputFiles = foundFiles;
 
-        const inputInfo: string[] = Object.keys(InputOutputFormats)
+        const foundFormats: any[] = [];
+        const inputInfo: string[] = Object.keys(InputFormats)
             .reduce((counts: string[], key: string): string[] => {
-                const fileCount: number = FileUtils.filterSuffix(foundFiles, InputOutputFormats[key]).length;
+                const fileCount: number = FileUtils.filterSuffix(foundFiles, InputFormats[key]).length;
                 if (fileCount > 0) {
                     counts.push(`${key}: ${fileCount}`);
+                    foundFormats.push({
+                        name: `${key} (.${InputFormats[key]})`,
+                        value: `${InputFormats[key]}`,
+                    });
                 }
                 return counts;
             }, []);
 
         const msg: string = `> Number of file found: ${foundFiles.length}\n> ${inputInfo.join(' | ')}`;
         console.log(chalk('royalblue.bold')(msg));
+
+        Questions.selectedFormats.choices = foundFormats;
+        const { selectedFormats }: any = await inquirer.prompt([Questions.selectedFormats]);
+
+        this.inputFiles = FileUtils.filterSuffix(foundFiles, selectedFormats);
     }
 
     private startSpinner(text: string): void {

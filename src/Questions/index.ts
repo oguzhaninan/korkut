@@ -153,6 +153,12 @@ export default {
                 value: `${OutputFormats[key]}`,
             })),
     },
+    selectedFormats: {
+        type: 'checkbox',
+        message: 'Select the file formats you want to process:',
+        name: 'selectedFormats',
+        choices: [],
+    },
     quality: {
         type: 'input',
         message: 'Set the output quality (1-100):',
