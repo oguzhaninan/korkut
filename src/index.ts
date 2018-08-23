@@ -123,6 +123,15 @@ export default class Resizer {
             // Resize
             case ImageOperations.Resize: {
                 options = await inquirer.prompt(ResizeQuestions);
+                const [width, height] = options.size.split('x')
+                    .map((v: string) => isNaN(parseInt(v, 10)) ? '' : parseInt(v, 10));
+                options.width = width;
+                options.height = height;
+
+                if (Number.isInteger(width) && Number.isInteger(height)) {
+                    const { ignoreAspectRatio }: any = await inquirer.prompt(Questions.ignoreAspectRatio);
+                    options.ignoreAspectRatio = ignoreAspectRatio;
+                }
             }
                 break;
             // Rotate

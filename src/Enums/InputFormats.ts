@@ -6,7 +6,7 @@ enum InputFormats {
     JPEG = 'jpeg',
     TIFF = 'tiff',
     PNG = 'png',
-    // SVG = 'svg',
+    SVG = 'svg',
     WEBP = 'webp',
     BITMAP = 'bmp',
     PDF = 'pdf',

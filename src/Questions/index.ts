@@ -129,7 +129,7 @@ export default {
     },
     direction: {
         type: 'list',
-        message: 'Select the direction?',
+        message: 'Select the direction:',
         name: 'direction',
         choices: [
             { name: 'NorthWest', value: 'NorthWest' },
@@ -155,7 +155,7 @@ export default {
     },
     quality: {
         type: 'input',
-        message: 'Set the output quality (1-100)?',
+        message: 'Set the output quality (1-100):',
         name: 'quality',
         default: 100,
         validate: (value: string): any => {
@@ -199,14 +199,33 @@ export default {
         message: 'Ignore aspect ratio when resizing?',
         name: 'ignoreAspectRatio',
     },
+    size: {
+        type: 'input',
+        message: 'Size e.g(48x48, x48, 48x):',
+        name: 'size',
+        validate: (value: string): any => {
+            value = value.toLowerCase();
+            // examples: 40x50, x60, 12x
+            if (value.search('x') !== -1) {
+                const [width, height] = value.split('x').map((v: string) => parseInt(v, 10));
+                if (isNaN(width) && isNaN(height)) {
+                    return 'You can only leave one value empty!';
+                } else {
+                    return true;
+                }
+            } else {
+                return 'Enter in the correct format!';
+            }
+        },
+    },
     width: {
         type: 'input',
-        message: 'Width?',
+        message: 'Width:',
         name: 'width',
     },
     height: {
         type: 'input',
-        message: 'Height?',
+        message: 'Height:',
         name: 'height',
     },
     x: {

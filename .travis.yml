@@ -4,8 +4,7 @@ node_js:
   - "node"
   - "lts/*"
 before_install:
-  - npm install npm -g
-  - sudo apt-get -y install imagemagick
+  - sudo apt-get install imagemagick graphicsmagick -y
 install:
   - npm install
 script:
