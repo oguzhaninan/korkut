@@ -3,8 +3,15 @@
   "version": "1.0.0",
   "description": "Image resizer",
   "main": "lib/index.js",
-  "author": "Oguzhan INAN",
   "license": "MIT",
+  "author": {
+    "name": "Oğuzhan İNAN",
+    "email": "oguzhan3488@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oguzhaninan/korkut.git"
+  },
   "scripts": {
     "start": "node lib/index.js",
     "test": "ava-ts",
@@ -29,6 +36,7 @@
     "ava": "^0.25.0",
     "ava-ts": "^0.25.1",
     "ts-node": "^7.0.1",
-    "tslint": "^5.11.0"
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.1"
   }
 }

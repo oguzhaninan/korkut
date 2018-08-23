@@ -2,6 +2,7 @@ import * as chalkPipe from 'chalk-pipe';
 import ImageOperations from "../Enums/ImageOperations";
 import InputFormats from '../Enums/InputFormats';
 import InputType from "../Enums/InputType";
+import OutputFormats from '../Enums/OutputFormats';
 import FileUtils from '../Utils/FileUtils';
 
 export default {
@@ -118,7 +119,7 @@ export default {
     },
     autoOrient: {
         type: 'confirm',
-        message: 'Auto orientate the image?',
+        message: 'Auto orientate the images?',
         name: 'autoOrient',
     },
     isSetDirection: {
@@ -146,10 +147,10 @@ export default {
         type: 'list',
         message: 'The file format to be converted:',
         name: 'outputType',
-        choices: Object.keys(InputFormats)
+        choices: Object.keys(OutputFormats)
             .map((key): any => ({
-                name: `${key} (.${InputFormats[key]})`,
-                value: `${InputFormats[key]}`,
+                name: `${key} (.${OutputFormats[key]})`,
+                value: `${OutputFormats[key]}`,
             })),
     },
     quality: {

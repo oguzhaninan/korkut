@@ -1,0 +1,13 @@
+sudo: required
+language: node_js
+node_js:
+  - "node"
+  - "lts/*"
+before_install:
+  - npm install npm -g
+  - sudo apt-get -y install imagemagick
+install:
+  - npm install
+script:
+  - npm run lint
+  - npm test

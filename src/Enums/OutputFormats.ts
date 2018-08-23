@@ -6,6 +6,7 @@ enum OutputFormats {
     JPEG = 'jpeg',
     TIFF = 'tiff',
     PNG = 'png',
+    WEBP = 'webp',
     BITMAP = 'bmp',
     PDF = 'pdf',
 }

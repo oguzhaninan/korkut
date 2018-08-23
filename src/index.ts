@@ -80,15 +80,16 @@ export default class Resizer {
         this.outputDirPath = outputDirPath;
         this.inputFiles = foundFiles;
 
-        const info: string[] = Object.keys(InputOutputFormats).reduce((counts: string[], key: string): any => {
-            const fileCount: number = FileUtils.filterSuffix(foundFiles, InputOutputFormats[key]).length;
-            if (fileCount > 0) {
-                counts.push(`${key}: ${fileCount}`);
-            }
-            return counts;
-        }, []);
+        const inputInfo: string[] = Object.keys(InputOutputFormats)
+            .reduce((counts: string[], key: string): string[] => {
+                const fileCount: number = FileUtils.filterSuffix(foundFiles, InputOutputFormats[key]).length;
+                if (fileCount > 0) {
+                    counts.push(`${key}: ${fileCount}`);
+                }
+                return counts;
+            }, []);
 
-        const msg: string = `> Number of file found: ${foundFiles.length}\n> ${info.join(' | ')}`;
+        const msg: string = `> Number of file found: ${foundFiles.length}\n> ${inputInfo.join(' | ')}`;
         console.log(chalk('royalblue.bold')(msg));
     }
 
