@@ -1,6 +1,5 @@
-import { convert, crop, IInfoResult, info, rescrop, resize, rotate, thumbnail } from 'easyimage';
+import * as EasyImage from 'easyimage';
 import * as gm from 'gm';
-import FileUtils from './FileUtils';
 gm.subClass({ imageMagick: true });
 
 export default class ImageUtils {
@@ -23,10 +22,11 @@ export default class ImageUtils {
     }
 
     public static async convert(options: any): Promise<any> {
-        return this.procces(options, (img: gm.State): void => {
-            if (options.autoOrient) { img.autoOrient(); }
-            img.quality(options.quality);
-        });
+        return EasyImage.convert(options);
+        // return this.procces(options, (img: gm.State): void => {
+        //     if (options.autoOrient) { img.autoOrient(); }
+        //     img.quality(options.quality);
+        // });
     }
 
     public static async resize(options: any): Promise<void> {

@@ -6,7 +6,12 @@
   "license": "MIT",
   "author": {
     "name": "Oğuzhan İNAN",
-    "email": "oguzhan3488@gmail.com"
+    "email": "oguzhan3488@gmail.com",
+    "url": "https://oguzhaninan.gitlab.io"
+  },
+  "preferGlobal": true,
+  "bin": {
+    "korkut": "./bin/korkut"
   },
   "repository": {
     "type": "git",

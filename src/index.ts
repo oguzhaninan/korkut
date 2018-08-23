@@ -174,6 +174,9 @@ export default class Resizer {
                 break;
             case InputType.File: {
                 try {
+                    if (options.outputType) {
+                        this.outputFilePath = FileUtils.changeExtension(this.outputFilePath, options.outputType);
+                    }
                     options.src = this.inputFilePath;
                     options.dst = this.outputFilePath;
                     await ImageUtils[operation](options);
