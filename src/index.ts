@@ -102,7 +102,7 @@ export default class Resizer {
         const msg: string = `> Number of file found: ${foundFiles.length}\n> ${inputInfo.join(' | ')}`;
         console.log(chalk('royalblue.bold')(msg));
 
-        if (foundFormats.length === 0) {
+        if (foundFormats.length === 1) {
             this.inputFiles = foundFiles;
         } else {
             Questions.selectedFormats.choices = foundFormats;
@@ -206,6 +206,7 @@ export default class Resizer {
 
                         this.spinner.text = `Processing… (${i + 1}/${inputCount}) - ${outputFileName}`;
                     } catch (err) {
+                        console.log(err);
                         isFail = true;
                         this.failSpinner(`Failed. - ${fileName}`);
                     }
@@ -224,8 +225,8 @@ export default class Resizer {
 
                     this.processedFiles.push(this.outputFilePath);
 
-                    this.succedSpinner('Successfully completed.');
                 } catch (err) {
+                    this.succedSpinner('Successfully completed.');
                     this.failSpinner('Failed.');
                 }
             }

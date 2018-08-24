@@ -6,14 +6,17 @@
 [![Build Status](https://travis-ci.org/oguzhaninan/korkut.svg?branch=master)](https://travis-ci.org/oguzhaninan/korkut)
 
 ## Getting started
-First download and install [GraphicsMagick](http://www.graphicsmagick.org/) or [ImageMagick](http://www.imagemagick.org/).
+First download and install [ImageMagick](http://www.imagemagick.org/).
 
 ### Mac OS X
+ImageMagick supports the WebP format. However, you must compile ImageMagick with the WebP option. To do so on OS X, install ImageMagick with the following command using Homebrew:
+
     brew install imagemagick --with-webp
-    brew install graphicsmagick
+If you have already installed ImageMagick, you would have to uninstall it then reinstall it.
 
 ### Ubuntu
-    sudo apt-get install imagemagick graphicsmagick -y
+    sudo apt-get install imagemagick -y
+    sudo apt-get install webp -y # for webp support
 
 ## Installation
 You need to install [Node.js](https://nodejs.org/en/download/) first, then install the tool globally using this command:

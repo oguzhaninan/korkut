@@ -1,12 +1,13 @@
 import * as EasyImage from 'easyimage';
 import * as gm from 'gm';
-// gm.subClass({ imageMagick: true });
 
 export default class ImageUtils {
 
+    private static imageMagick: gm.SubClass = gm.subClass({ imageMagick: true });
+
     public static async procces(opt: any, cb: (img: gm.State) => void): Promise<void> {
         return new Promise<void>((resolve, reject): void => {
-            const img: gm.State = gm(opt.src);
+            const img: gm.State = ImageUtils.imageMagick(opt.src);
             cb(img);
             img.write(opt.dst, (err, stdout, stderr, cmd): void => {
                 if (err) { console.log(err); }
@@ -17,16 +18,13 @@ export default class ImageUtils {
 
     public static async optimize(opt: any): Promise<void> {
         return this.procces(opt, (img: gm.State): void => {
+            if (opt.autoOrient) { img.autoOrient(); }
             img.quality(opt.quality);
         });
     }
 
     public static async convert(opt: any): Promise<any> {
         return EasyImage.convert(opt);
-        // return this.procces(opt, (img: gm.State): void => {
-        //     if (opt.autoOrient) { img.autoOrient(); }
-        //     img.quality(opt.quality);
-        // });
     }
 
     public static async resize(opt: any): Promise<void> {
