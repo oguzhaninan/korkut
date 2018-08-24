@@ -2,11 +2,10 @@ sudo: required
 language: node_js
 node_js:
   - "node"
-  - "lts/*"
 before_install:
   - sudo apt-get install imagemagick graphicsmagick -y
 install:
-  - npm install
+  - yarn install
 script:
-  - npm run lint
-  - npm test
+  - yarn run lint
+  - yarn test
