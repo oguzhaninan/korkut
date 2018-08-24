@@ -9,7 +9,7 @@
 First download and install [ImageMagick](http://www.imagemagick.org/).
 
 ### Mac OS X
-ImageMagick supports the WebP format. However, you must compile ImageMagick with the WebP option. To do so on OS X, install ImageMagick with the following command using Homebrew:
+ImageMagick supports the [WebP](https://developers.google.com/speed/webp/) format. However, you must compile ImageMagick with the WebP option. To do so on OS X, install ImageMagick with the following command using Homebrew:
 
     brew install imagemagick --with-webp
 If you have already installed ImageMagick, you would have to uninstall it then reinstall it.
@@ -25,6 +25,16 @@ You need to install [Node.js](https://nodejs.org/en/download/) first, then insta
 sudo npm install -g korkut
 ```
 
+## Features
+* Optimize
+* [Convert](#convert)
+* [Crop](#crop)
+* [Resize](#resize)
+* [Rotate](#rotate)
+* [Watermark](#watermark)
+* [Flip](#flip)
+
+
 ## Convert
 <p align="center"><img src="https://raw.githubusercontent.com/oguzhaninan/korkut/master/screenshots/convert.gif?raw=true"/></p>
 
@@ -36,6 +46,12 @@ sudo npm install -g korkut
 
 ## Rotate
 <p align="center"><img src="https://raw.githubusercontent.com/oguzhaninan/korkut/master/screenshots/rotate.gif?raw=true"/></p>
+
+## Watermark
+<p align="center"><img src="https://raw.githubusercontent.com/oguzhaninan/korkut/master/screenshots/watermark.gif?raw=true"/></p>
+
+## Flip
+<p align="center"><img src="https://raw.githubusercontent.com/oguzhaninan/korkut/master/screenshots/flip.gif?raw=true"/></p>
 
 # License
 This project is under the MIT license.

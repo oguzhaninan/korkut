@@ -256,11 +256,25 @@ export default {
         type: 'input',
         message: 'Width:',
         name: 'width',
+        validate: (value: string): boolean | string => {
+            const val: number = parseInt(value, 10);
+            if (!Number.isInteger(val)) {
+                return 'Type the number.';
+            }
+            return true;
+        },
     },
     height: {
         type: 'input',
         message: 'Height:',
         name: 'height',
+        validate: (value: string): boolean | string => {
+            const val: number = parseInt(value, 10);
+            if (!Number.isInteger(val)) {
+                return 'Type the number.';
+            }
+            return true;
+        },
     },
     horizontalOffset: {
         type: 'input',

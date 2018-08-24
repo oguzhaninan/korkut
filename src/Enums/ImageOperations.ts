@@ -9,7 +9,6 @@ enum ImageOperations {
     Watermark = 'watermark',
     Flip = 'flip',
     Rotate = 'rotate',
-    Thumbnail = 'thumbnail',
 }
 
 export default ImageOperations;

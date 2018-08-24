@@ -224,9 +224,8 @@ export default class Resizer {
                     await ImageUtils[operation](options);
 
                     this.processedFiles.push(this.outputFilePath);
-
-                } catch (err) {
                     this.succedSpinner('Successfully completed.');
+                } catch (err) {
                     this.failSpinner('Failed.');
                 }
             }
