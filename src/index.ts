@@ -6,13 +6,16 @@ import * as path from 'path';
 import ImageOperations from "./Enums/ImageOperations";
 import InputFormats from './Enums/InputFormats';
 import InputType from "./Enums/InputType";
+
 import Questions from './Questions';
 import ConvertQuestions from './Questions/ConvertQuestions';
 import CropQuestions from './Questions/CropQuestions';
+import FlipQuestions from './Questions/FlipQuestions';
 import OptimizeQuestions from './Questions/OptimizeQuestions';
 import ResizeQuestions from './Questions/ResizeQuestions';
 import RotateQuestions from './Questions/RotateQuestions';
 import WatermarkQuestions from './Questions/WatermarkQuestions';
+
 import FileUtils from './Utils/FileUtils';
 import ImageUtils from './Utils/ImageUtils';
 
@@ -170,6 +173,11 @@ export default class Resizer {
             // Watermark
             case ImageOperations.Watermark: {
                 options = await inquirer.prompt(WatermarkQuestions);
+            }
+                break;
+            // Flip
+            case ImageOperations.Flip: {
+                options = await inquirer.prompt(FlipQuestions);
             }
                 break;
         }

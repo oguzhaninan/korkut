@@ -129,6 +129,16 @@ export default {
         message: 'Auto orientate the images?',
         name: 'autoOrient',
     },
+    verticalFlip: {
+        type: 'confirm',
+        message: 'Flip it vertical?',
+        name: 'verticalFlip',
+    },
+    horizontalFlip: {
+        type: 'confirm',
+        message: 'Flip it horizontally?',
+        name: 'horizontalFlip',
+    },
     isSetDirection: {
         type: 'confirm',
         message: 'Would you like to set direction?',

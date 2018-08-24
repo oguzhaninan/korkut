@@ -2,13 +2,14 @@
  * Image operations.
  */
 enum ImageOperations {
+    Optimize = 'optimize',
     Convert = 'convert',
     Crop = 'crop',
     Resize = 'resize',
-    Rotate = 'rotate',
     Watermark = 'watermark',
+    Flip = 'flip',
+    Rotate = 'rotate',
     Thumbnail = 'thumbnail',
-    Optimize = 'optimize',
 }
 
 export default ImageOperations;

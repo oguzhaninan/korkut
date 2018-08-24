@@ -74,4 +74,15 @@ export default class ImageUtils {
 
         return EasyImage.execute('convert', args);
     }
+
+    public static async flip(opt: any): Promise<void> {
+        return this.procces(opt, (img: gm.State): void => {
+            if (opt.verticalFlip) {
+                img.flip();
+            }
+            if (opt.horizontalFlip) {
+                img.flop();
+            }
+        });
+    }
 }
