@@ -1,6 +1,5 @@
 import * as chalkPipe from 'chalk-pipe';
 import ImageOperations from "../Enums/ImageOperations";
-import InputFormats from '../Enums/InputFormats';
 import InputType from "../Enums/InputType";
 import OutputFormats from '../Enums/OutputFormats';
 import FileUtils from '../Utils/FileUtils';
@@ -106,22 +105,11 @@ export default {
         type: 'list',
         message: 'What do you want?',
         name: 'operation',
-        choices: [{
-            name: 'Optimize',
-            value: ImageOperations.Optimize,
-        }, {
-            name: 'Convert',
-            value: ImageOperations.Convert,
-        }, {
-            name: 'Crop',
-            value: ImageOperations.Crop,
-        }, {
-            name: 'Resize',
-            value: ImageOperations.Resize,
-        }, {
-            name: 'Rotate',
-            value: ImageOperations.Rotate,
-        }],
+        choices: Object.keys(ImageOperations)
+            .map((key: string) => ({
+                name: key,
+                value: ImageOperations[key],
+            })),
     },
     autoOrient: {
         type: 'confirm',

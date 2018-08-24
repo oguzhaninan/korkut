@@ -1,6 +1,6 @@
 import * as EasyImage from 'easyimage';
 import * as gm from 'gm';
-gm.subClass({ imageMagick: true });
+// gm.subClass({ imageMagick: true });
 
 export default class ImageUtils {
 
@@ -57,5 +57,19 @@ export default class ImageUtils {
             }
             img.quality(options.quality);
         });
+    }
+
+    public static async waterMark(options: any): Promise<any> {
+        const args: string[] = [options.src, options.watermark];
+
+        if (options.geometry) {
+            args.push('-geometry', options.geometry);
+        }
+        if (options.gravity) {
+            args.push('-gravity', options.gravity);
+        }
+        args.push('-composite', options.dst);
+
+        return EasyImage.execute('convert', args);
     }
 }
