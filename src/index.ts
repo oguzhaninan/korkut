@@ -29,6 +29,8 @@ export default class Resizer {
     private outputDirPath: string;
     private inputFiles: string[];
 
+    private processedFiles: string[];
+
     private spinner: any;
 
     constructor() {
@@ -96,10 +98,14 @@ export default class Resizer {
         const msg: string = `> Number of file found: ${foundFiles.length}\n> ${inputInfo.join(' | ')}`;
         console.log(chalk('royalblue.bold')(msg));
 
-        Questions.selectedFormats.choices = foundFormats;
-        const { selectedFormats }: any = await inquirer.prompt([Questions.selectedFormats]);
+        if (foundFormats.length === 0) {
+            this.inputFiles = foundFiles;
+        } else {
+            Questions.selectedFormats.choices = foundFormats;
+            const { selectedFormats }: any = await inquirer.prompt([Questions.selectedFormats]);
 
-        this.inputFiles = FileUtils.filterSuffix(foundFiles, selectedFormats);
+            this.inputFiles = FileUtils.filterSuffix(foundFiles, selectedFormats);
+        }
     }
 
     private startSpinner(text: string): void {
@@ -164,10 +170,11 @@ export default class Resizer {
 
         this.startSpinner('Processing…');
 
+        this.processedFiles = [];
         switch (this.inputType) {
             case InputType.Directory: {
                 const inputCount: number = this.inputFiles.length;
-                let isFail: boolean = false;
+                let isFail = false;
 
                 for (let i = 0; i < this.inputFiles.length; ++i) {
                     const fileName: string = this.inputFiles[i];
@@ -181,10 +188,12 @@ export default class Resizer {
                         options.dst = path.join(this.outputDirPath, outputFileName);
                         await ImageUtils[operation](options);
 
+                        this.processedFiles.push(outputFileName);
+
                         this.spinner.text = `Processing… (${i + 1}/${inputCount}) - ${outputFileName}`;
                     } catch (err) {
                         isFail = true;
-                        this.failSpinner('Failed.');
+                        this.failSpinner(`Failed. - ${fileName}`);
                     }
                 }
                 if (!isFail) { this.succedSpinner('Successfully completed.'); }
@@ -199,12 +208,22 @@ export default class Resizer {
                     options.dst = this.outputFilePath;
                     await ImageUtils[operation](options);
 
+                    // this.processedFiles.push(this.outputFilePath);
+
                     this.succedSpinner('Successfully completed.');
                 } catch (err) {
                     this.failSpinner('Failed.');
                 }
             }
                 break;
+        }
+
+        const { againProcess }: any = await inquirer.prompt([Questions.againProcess]);
+        if (againProcess) {
+            this.inputDirPath = this.outputDirPath;
+            this.prefix = this.suffix = '';
+            this.inputFiles.splice(0, this.inputFiles.length, ...this.processedFiles);
+            this.askImageOperations();
         }
     }
 

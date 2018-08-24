@@ -22,7 +22,7 @@ export default {
         type: 'input',
         message: 'Input file path:',
         name: 'inputFilePath',
-        validate: (path: string) => {
+        validate: (path: string): boolean | string => {
             if (!FileUtils.exists(path)) {
                 return 'File not exists.';
             } else if (!FileUtils.isSupportedFile(path)) {
@@ -40,7 +40,7 @@ export default {
         type: 'input',
         message: 'Directory path:',
         name: 'inputDirPath',
-        validate: (path: string) => {
+        validate: (path: string): boolean | string => {
             try {
                 if (!FileUtils.isDirectory(path)) {
                     return 'Not directory.';
@@ -153,18 +153,29 @@ export default {
                 value: `${OutputFormats[key]}`,
             })),
     },
+    againProcess: {
+        type: 'confirm',
+        message: 'Do you want to do different processing again with processed files?',
+        name: 'againProcess',
+    },
     selectedFormats: {
         type: 'checkbox',
         message: 'Select the file formats you want to process:',
         name: 'selectedFormats',
         choices: [],
+        validate: (values: string[]): boolean | string => {
+            if (values.length === 0) {
+                return 'You must choose at least one.';
+            }
+            return true;
+        },
     },
     quality: {
         type: 'input',
         message: 'Set the output quality (1-100):',
         name: 'quality',
         default: 100,
-        validate: (value: string): any => {
+        validate: (value: string): boolean | string => {
             const quality: number = parseInt(value, 10);
             if (Number.isInteger(quality)) {
                 if (quality <= 0 || quality > 100) {
@@ -188,7 +199,7 @@ export default {
         type: 'input',
         message: 'Degrees:',
         name: 'degrees',
-        validate: (value: string): any => {
+        validate: (value: string): boolean | string => {
             const quality: number = parseInt(value, 10);
             if (Number.isInteger(quality)) {
                 if (quality <= 0 || quality > 360) {
@@ -209,7 +220,7 @@ export default {
         type: 'input',
         message: 'Size e.g(48x48, x48, 48x):',
         name: 'size',
-        validate: (value: string): any => {
+        validate: (value: string): boolean | string => {
             value = value.toLowerCase();
             // examples: 40x50, x60, 12x
             if (value.search('x') !== -1) {
@@ -238,7 +249,7 @@ export default {
         type: 'input',
         message: 'Left distance of crop:',
         name: 'x',
-        validate: (value: string): any => {
+        validate: (value: string): boolean | string => {
             const quality: number = parseInt(value, 10);
             if (Number.isInteger(quality)) {
                 if (quality < 0) {
@@ -254,7 +265,7 @@ export default {
         type: 'input',
         message: 'Top distance of crop:',
         name: 'y',
-        validate: (value: string): any => {
+        validate: (value: string): boolean | string => {
             const quality: number = parseInt(value, 10);
             if (Number.isInteger(quality)) {
                 if (quality < 0) {
