@@ -1,10 +1,14 @@
 import * as fs from 'fs';
 import InputFormats from '../Enums/InputFormats';
+import OutputFormats from '../Enums/OutputFormats';
 
 export default class FileUtils {
 
     public static readonly INPUT_FORMATS: string[] = Object.keys(InputFormats)
         .map((key): string => InputFormats[key]);
+
+    public static readonly OUTPUT_FORMATS: string[] = Object.keys(OutputFormats)
+        .map((key): string => OutputFormats[key]);
 
     public static isDirectory(path: string): boolean {
         return fs.lstatSync(path).isDirectory();
@@ -14,8 +18,12 @@ export default class FileUtils {
         return fs.existsSync(path);
     }
 
-    public static isSupportedFile(fileName: string): boolean {
+    public static isSupportedInputFile(fileName: string): boolean {
         return this.filterSuffix([fileName], this.INPUT_FORMATS).length !== 0;
+    }
+
+    public static isSupportedOutputFile(fileName: string): boolean {
+        return this.filterSuffix([fileName], this.OUTPUT_FORMATS).length !== 0;
     }
 
     public static getSuffix(fileName: string): string {
