@@ -4,71 +4,73 @@ import * as gm from 'gm';
 
 export default class ImageUtils {
 
-    public static async procces(options: any, cb: (img: gm.State) => void): Promise<void> {
+    public static async procces(opt: any, cb: (img: gm.State) => void): Promise<void> {
         return new Promise<void>((resolve, reject): void => {
-            const img: gm.State = gm(options.src);
+            const img: gm.State = gm(opt.src);
             cb(img);
-            img.write(options.dst, (err, stdout, stderr, cmd): void => {
+            img.write(opt.dst, (err, stdout, stderr, cmd): void => {
                 if (err) { console.log(err); }
                 err ? reject(err) : resolve();
             });
         });
     }
 
-    public static async optimize(options: any): Promise<void> {
-        return this.procces(options, (img: gm.State): void => {
-            img.quality(options.quality);
+    public static async optimize(opt: any): Promise<void> {
+        return this.procces(opt, (img: gm.State): void => {
+            img.quality(opt.quality);
         });
     }
 
-    public static async convert(options: any): Promise<any> {
-        return EasyImage.convert(options);
-        // return this.procces(options, (img: gm.State): void => {
-        //     if (options.autoOrient) { img.autoOrient(); }
-        //     img.quality(options.quality);
+    public static async convert(opt: any): Promise<any> {
+        return EasyImage.convert(opt);
+        // return this.procces(opt, (img: gm.State): void => {
+        //     if (opt.autoOrient) { img.autoOrient(); }
+        //     img.quality(opt.quality);
         // });
     }
 
-    public static async resize(options: any): Promise<void> {
-        return this.procces(options, (img: gm.State): void => {
-            if (options.autoOrient) { img.autoOrient(); }
-            img.quality(options.quality);
-            const resizeOpt: any = options.ignoreAspectRatio ? '!' : '';
-            img.resize(options.width, options.height, resizeOpt);
+    public static async resize(opt: any): Promise<void> {
+        return this.procces(opt, (img: gm.State): void => {
+            if (opt.autoOrient) { img.autoOrient(); }
+            img.quality(opt.quality);
+            const resizeOpt: any = opt.ignoreAspectRatio ? '!' : '';
+            img.resize(opt.width, opt.height, resizeOpt);
         });
     }
 
-    public static async rotate(options: any): Promise<void> {
-        return this.procces(options, (img: gm.State): void => {
-            if (options.autoOrient) { img.autoOrient(); }
-            img.quality(options.quality);
-            img.rotate(options.backgroundColor, options.degrees);
+    public static async rotate(opt: any): Promise<void> {
+        return this.procces(opt, (img: gm.State): void => {
+            if (opt.autoOrient) { img.autoOrient(); }
+            img.quality(opt.quality);
+            img.rotate(opt.backgroundColor, opt.degrees);
         });
     }
 
-    public static async crop(options: any): Promise<void> {
-        return this.procces(options, (img: gm.State): void => {
-            if (options.autoOrient) { img.autoOrient(); }
-            if (options.isSetDirection) {
-                img.gravity(options.direction);
-                img.crop(options.width, options.height);
+    public static async crop(opt: any): Promise<void> {
+        return this.procces(opt, (img: gm.State): void => {
+            if (opt.autoOrient) { img.autoOrient(); }
+            if (opt.isSetDirection) {
+                img.gravity(opt.direction);
+                img.crop(opt.width, opt.height);
             } else {
-                img.crop(options.width, options.height, options.x, options.y);
+                img.crop(opt.width, opt.height, opt.x, opt.y);
             }
-            img.quality(options.quality);
+            img.quality(opt.quality);
         });
     }
 
-    public static async waterMark(options: any): Promise<any> {
-        const args: string[] = [options.src, options.watermark];
+    public static async watermark(opt: any): Promise<any> {
+        const args: string[] = [opt.src, opt.watermarkFilePath];
 
-        if (options.geometry) {
-            args.push('-geometry', options.geometry);
+        let geometry: string = `${opt.size}+${opt.horizontalOffset}+${opt.verticalOffset}`;
+        geometry += opt.ignoreAspectRatio ? '!' : '';
+
+        args.push('-geometry', geometry);
+
+        if (opt.direction) {
+            args.push('-gravity', opt.direction);
         }
-        if (options.gravity) {
-            args.push('-gravity', options.gravity);
-        }
-        args.push('-composite', options.dst);
+        args.push('-composite', opt.dst);
 
         return EasyImage.execute('convert', args);
     }

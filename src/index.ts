@@ -12,6 +12,7 @@ import CropQuestions from './Questions/CropQuestions';
 import OptimizeQuestions from './Questions/OptimizeQuestions';
 import ResizeQuestions from './Questions/ResizeQuestions';
 import RotateQuestions from './Questions/RotateQuestions';
+import WatermarkQuestions from './Questions/WatermarkQuestions';
 import FileUtils from './Utils/FileUtils';
 import ImageUtils from './Utils/ImageUtils';
 
@@ -44,25 +45,25 @@ export default class Resizer {
     }
 
     private async askInputFilePath(): Promise<void> {
-        const { inputFilePath }: any = await inquirer.prompt([Questions.inputFilePath]);
+        const { inputFilePath }: any = await inquirer.prompt(Questions.inputFilePath);
         this.inputFilePath = inputFilePath;
     }
 
     private async askOutputFilePath(): Promise<void> {
-        const { outputFilePath }: any = await inquirer.prompt([Questions.outputFilePath]);
+        const { outputFilePath }: any = await inquirer.prompt(Questions.outputFilePath);
         this.outputFilePath = outputFilePath;
     }
 
     private async askSuffixOrPrefix(): Promise<void> {
-        const { suffixOrPrefix }: any = await inquirer.prompt([Questions.suffixOrPrefix]);
+        const { suffixOrPrefix }: any = await inquirer.prompt(Questions.suffixOrPrefix);
 
         switch (suffixOrPrefix) {
             case 'suffix':
-                const { suffix }: any = await inquirer.prompt([Questions.suffix]);
+                const { suffix }: any = await inquirer.prompt(Questions.suffix);
                 this.suffix = suffix;
                 break;
             case 'prefix':
-                const { prefix }: any = await inquirer.prompt([Questions.prefix]);
+                const { prefix }: any = await inquirer.prompt(Questions.prefix);
                 this.prefix = prefix;
                 break;
             default:
@@ -102,7 +103,7 @@ export default class Resizer {
             this.inputFiles = foundFiles;
         } else {
             Questions.selectedFormats.choices = foundFormats;
-            const { selectedFormats }: any = await inquirer.prompt([Questions.selectedFormats]);
+            const { selectedFormats }: any = await inquirer.prompt(Questions.selectedFormats);
 
             this.inputFiles = FileUtils.filterSuffix(foundFiles, selectedFormats);
         }
@@ -121,7 +122,7 @@ export default class Resizer {
     }
 
     private async askImageOperations(): Promise<void> {
-        const { operation }: any = await inquirer.prompt([Questions.operations]);
+        const { operation }: any = await inquirer.prompt(Questions.operations);
 
         let options: any;
         switch (operation) {
@@ -158,12 +159,17 @@ export default class Resizer {
             case ImageOperations.Crop: {
                 options = await inquirer.prompt(CropQuestions);
                 if (options.isSetDirection) {
-                    const { direction }: any = await inquirer.prompt([Questions.direction]);
+                    const { direction }: any = await inquirer.prompt(Questions.direction);
                     options.direction = direction;
                 } else {
                     const position: any = await inquirer.prompt([Questions.x, Questions.y]);
                     Object.keys(position).forEach((key: string): void => options[key] = position[key]);
                 }
+            }
+                break;
+            // Watermark
+            case ImageOperations.Watermark: {
+                options = await inquirer.prompt(WatermarkQuestions);
             }
                 break;
         }
@@ -218,7 +224,7 @@ export default class Resizer {
                 break;
         }
 
-        const { againProcess }: any = await inquirer.prompt([Questions.againProcess]);
+        const { againProcess }: any = await inquirer.prompt(Questions.againProcess);
         if (againProcess) {
             switch (this.inputType) {
                 case InputType.Directory: {
@@ -237,7 +243,7 @@ export default class Resizer {
     }
 
     private async askInputType(): Promise<void> {
-        const { inputType }: any = await inquirer.prompt([Questions.inputType]);
+        const { inputType }: any = await inquirer.prompt(Questions.inputType);
         this.inputType = inputType;
 
         switch (inputType) {

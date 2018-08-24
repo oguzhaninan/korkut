@@ -1,7 +1,7 @@
 import test from 'ava';
 
-import FileUtils from '../src/Utils/FileUtils';
 import InputFormats from '../src/Enums/InputFormats';
+import FileUtils from '../src/Utils/FileUtils';
 
 test('suffix or prefix add', (t) => {
     const newName: string = FileUtils.addPrefixOrSuffix('example.jpg', 'foo-', '-bar');
@@ -36,12 +36,12 @@ test('filter suffix', (t) => {
 });
 
 test('is supported file', (t) => {
-    t.is(FileUtils.isSupportedFile('example.jpg'), true);
-    t.is(FileUtils.isSupportedFile('example.2-0.jpeg'), true);
-    t.is(FileUtils.isSupportedFile('/home/foo/example.png'), true);
-    t.is(FileUtils.isSupportedFile('/home/foo/example.PNG'), true);
-    t.is(FileUtils.isSupportedFile('/home/foo/example.JPEG'), true);
-    t.is(FileUtils.isSupportedFile('example.bmp'), true);
+    t.is(FileUtils.isSupportedInputFile('example.jpg'), true);
+    t.is(FileUtils.isSupportedInputFile('example.2-0.jpeg'), true);
+    t.is(FileUtils.isSupportedInputFile('/home/foo/example.png'), true);
+    t.is(FileUtils.isSupportedInputFile('/home/foo/example.PNG'), true);
+    t.is(FileUtils.isSupportedInputFile('/home/foo/example.JPEG'), true);
+    t.is(FileUtils.isSupportedInputFile('example.bmp'), true);
 });
 
 test('change extension', (t) => {
