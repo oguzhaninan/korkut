@@ -208,7 +208,7 @@ export default class Resizer {
                     options.dst = this.outputFilePath;
                     await ImageUtils[operation](options);
 
-                    // this.processedFiles.push(this.outputFilePath);
+                    this.processedFiles.push(this.outputFilePath);
 
                     this.succedSpinner('Successfully completed.');
                 } catch (err) {
@@ -220,9 +220,18 @@ export default class Resizer {
 
         const { againProcess }: any = await inquirer.prompt([Questions.againProcess]);
         if (againProcess) {
-            this.inputDirPath = this.outputDirPath;
+            switch (this.inputType) {
+                case InputType.Directory: {
+                    this.inputDirPath = this.outputDirPath;
+                    this.inputFiles.splice(0, this.inputFiles.length, ...this.processedFiles);
+                }
+                    break;
+                case InputType.File: {
+                    this.inputFilePath = this.processedFiles[0];
+                }
+                    break;
+            }
             this.prefix = this.suffix = '';
-            this.inputFiles.splice(0, this.inputFiles.length, ...this.processedFiles);
             this.askImageOperations();
         }
     }

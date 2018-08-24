@@ -25,7 +25,7 @@ export default {
         validate: (path: string): boolean | string => {
             if (!FileUtils.exists(path)) {
                 return 'File not exists.';
-            } else if (!FileUtils.isSupportedFile(path)) {
+            } else if (!FileUtils.isSupportedInputFile(path)) {
                 return 'File is not supported.';
             }
             return true;
@@ -35,6 +35,12 @@ export default {
         type: 'input',
         message: 'Output file path:',
         name: 'outputFilePath',
+        validate: (path: string): boolean | string => {
+            if (!FileUtils.isSupportedOutputFile(path)) {
+                return 'File is not supported.';
+            }
+            return true;
+        },
     },
     inputDirPath: {
         type: 'input',

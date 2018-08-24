@@ -49,7 +49,7 @@ export default class ImageUtils {
     public static async crop(options: any): Promise<void> {
         return this.procces(options, (img: gm.State): void => {
             if (options.autoOrient) { img.autoOrient(); }
-            if (options.isDirection) {
+            if (options.isSetDirection) {
                 img.gravity(options.direction);
                 img.crop(options.width, options.height);
             } else {
