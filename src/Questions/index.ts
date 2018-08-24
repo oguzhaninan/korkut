@@ -30,6 +30,19 @@ export default {
             return true;
         },
     },
+    watermarkFilePath: {
+        type: 'input',
+        message: 'Watermark path:',
+        name: 'watermarkFilePath',
+        validate: (path: string): boolean | string => {
+            if (!FileUtils.exists(path)) {
+                return 'File not exists.';
+            } else if (!FileUtils.isSupportedInputFile(path)) {
+                return 'File is not supported.';
+            }
+            return true;
+        },
+    },
     outputFilePath: {
         type: 'input',
         message: 'Output file path:',
@@ -239,14 +252,41 @@ export default {
         message: 'Height:',
         name: 'height',
     },
+    horizontalOffset: {
+        type: 'input',
+        message: 'Horizontal offset:',
+        default: 0,
+        name: 'horizontalOffset',
+        validate: (value: string): boolean | string => {
+            const val: number = parseInt(value, 10);
+            if (!Number.isInteger(val)) {
+                return 'Type the number.';
+            }
+            return true;
+        },
+    },
+    verticalOffset: {
+        type: 'input',
+        message: 'Vertical offset:',
+        default: 0,
+        name: 'verticalOffset',
+        validate: (value: string): boolean | string => {
+            const val: number = parseInt(value, 10);
+            if (!Number.isInteger(val)) {
+                return 'Type the number.';
+            }
+            return true;
+        },
+    },
     x: {
         type: 'input',
         message: 'Left distance of crop:',
         name: 'x',
+        default: 0,
         validate: (value: string): boolean | string => {
-            const quality: number = parseInt(value, 10);
-            if (Number.isInteger(quality)) {
-                if (quality < 0) {
+            const val: number = parseInt(value, 10);
+            if (Number.isInteger(val)) {
+                if (val < 0) {
                     return 'Must be greater than 0.';
                 }
             } else {
@@ -259,6 +299,7 @@ export default {
         type: 'input',
         message: 'Top distance of crop:',
         name: 'y',
+        default: 0,
         validate: (value: string): boolean | string => {
             const quality: number = parseInt(value, 10);
             if (Number.isInteger(quality)) {
