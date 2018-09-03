@@ -236,6 +236,7 @@ https://imagemagick.org/script/download.php#windows
                         console.log(err);
                         isFail = true;
                         this.failSpinner(`Failed. - ${fileName}`);
+                        process.exit();
                     }
                 }
                 if (!isFail) { this.succedSpinner('Successfully completed.'); }
@@ -254,6 +255,7 @@ https://imagemagick.org/script/download.php#windows
                     this.succedSpinner('Successfully completed.');
                 } catch (err) {
                     this.failSpinner('Failed.');
+                    process.exit();
                 }
             }
                 break;
