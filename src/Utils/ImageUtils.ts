@@ -83,4 +83,8 @@ export default class ImageUtils {
             }
         });
     }
+
+    public static async getImageMagickVersion(): Promise<number> {
+        return EasyImage.getImageMagickVersion();
+    }
 }

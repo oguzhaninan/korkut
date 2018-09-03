@@ -42,9 +42,36 @@ export default class Resizer {
     }
 
     public async main(): Promise<void> {
+        console.log(chalk('green')(`Korkut Version: ${this.getKorkutVersion()}`));
+
+        await this.checkImageMagickVersion();
+
         await this.askInputType();
 
         await this.askImageOperations();
+    }
+
+    private getKorkutVersion(): number {
+        return require("../package.json").version;
+    }
+
+    private async checkImageMagickVersion() {
+        try {
+            const version = await ImageUtils.getImageMagickVersion();
+            console.log(chalk('green')(`ImageMagick Version: ${version}\n`));
+        } catch (err) {
+            console.log(`
+${chalk('red')('ImageMagick not found.')}\n
+${chalk('white.bold')('Mac OS X Install:')}
+brew install imagemagick --with-webp\n
+${chalk('white.bold')('Ubuntu Install:')}
+sudo apt-get install imagemagick -y
+sudo apt-get install webp -y # for webp support\n
+${chalk('white.bold')('Windows Install:')}
+https://imagemagick.org/script/download.php#windows
+            `);
+            process.exit();
+        }
     }
 
     private async askInputFilePath(): Promise<void> {
