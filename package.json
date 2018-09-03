@@ -1,6 +1,6 @@
 {
   "name": "korkut",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Quick and simple image processing at the command line.",
   "main": "lib/index.js",
   "license": "MIT",
