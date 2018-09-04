@@ -84,7 +84,11 @@ export default {
                     return 'Not directory.';
                 }
             } catch (err) {
-                return 'Invalid path.';
+                try {
+                    FileUtils.mkdir(path);
+                } catch (err) {
+                    return 'Invalid path.';
+                }
             }
             return true;
         },
@@ -149,15 +153,15 @@ export default {
         message: 'Select the direction:',
         name: 'direction',
         choices: [
-            { name: 'NorthWest', value: 'NorthWest' },
+            { name: 'North West', value: 'NorthWest' },
             { name: 'North', value: 'North' },
-            { name: 'NorthEast', value: 'NorthEast' },
+            { name: 'North East', value: 'NorthEast' },
             { name: 'West', value: 'West' },
             { name: 'Center', value: 'Center' },
             { name: 'East', value: 'East' },
-            { name: 'SouthWest', value: 'SouthWest' },
+            { name: 'South West', value: 'SouthWest' },
             { name: 'South', value: 'South' },
-            { name: 'SouthEast', value: 'SouthEast' },
+            { name: 'South East', value: 'SouthEast' },
         ],
     },
     outputType: {
