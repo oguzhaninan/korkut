@@ -20,7 +20,7 @@ test('suffix or prefix add', (t) => {
 });
 
 test('filter suffix', (t) => {
-    const items: string[] = ['one.1.jpg', 'two.jpg', 'three.3.png', 'four.4.gif', 'five.jpeg'];
+    const items: string[] = ['one.1.jpg', 'two.jpg', 'three.3.png', 'four.4.gif', 'five.jpeg', 'png', 'jpg'];
 
     const filterJPG = FileUtils.filterSuffix(items, ['jpg']);
     t.deepEqual(filterJPG, ['one.1.jpg', 'two.jpg']);
