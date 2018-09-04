@@ -2,8 +2,6 @@ sudo: required
 language: node_js
 node_js:
   - "node"
-before_install:
-  - sudo apt-get install imagemagick graphicsmagick -y
 install:
   - yarn install
 script:
