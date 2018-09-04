@@ -1,7 +1,7 @@
 import * as fs from 'fs';
+import { mkdirSync } from 'fs';
 import InputFormats from '../Enums/InputFormats';
 import OutputFormats from '../Enums/OutputFormats';
-import { mkdirSync } from 'fs';
 
 export default class FileUtils {
 
