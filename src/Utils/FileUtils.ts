@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import InputFormats from '../Enums/InputFormats';
 import OutputFormats from '../Enums/OutputFormats';
+import { mkdirSync } from 'fs';
 
 export default class FileUtils {
 
@@ -27,7 +28,8 @@ export default class FileUtils {
     }
 
     public static getSuffix(fileName: string): string {
-        return fileName.split('.').pop();
+        const name: string[] = fileName.split('.');
+        return name.length > 1 ? name.pop() : '';
     }
 
     public static filterSuffix(items: string[], suffix: string[] | string): string[] {
@@ -66,6 +68,10 @@ export default class FileUtils {
         const temp: string[] = outputFileName.split('.').reverse();
         temp.splice(0, 1, outputType);
         return temp.reverse().join('.');
+    }
+
+    public static mkdir(path: string): void {
+        return fs.mkdirSync(path);
     }
 
 }
