@@ -1,6 +1,10 @@
 # Korkut
 > Quick and simple image processing at the command line.
 
+<a href="https://www.patreon.com/oguzhaninan">
+    <img alt="Patreon" src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="40" />
+</a>
+
 [![npm](https://img.shields.io/npm/v/korkut.svg)](https://www.npmjs.com/package/korkut)
 [![npm](https://img.shields.io/npm/l/korkut.svg)](https://github.com/oguzhaninan/korkut/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/oguzhaninan/korkut.svg?branch=master)](https://travis-ci.org/oguzhaninan/korkut)
